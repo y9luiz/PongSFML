@@ -6,6 +6,9 @@ const int WINDOW_WIDTH = 640;
 const int WINDOW_HEIGHT = 480;
 const sf::Vector2f PADDLE_SIZE(30,150);
 
+// PLAYERS DEFINITIONS
+const sf::Vector2f PADDLE_SPEED(1, 1);;
+
 // PLAYER 1 DEFINITIONS 
 const float PLAYER_1_X_POS = 100;
 const float PLAYER_1_Y_POS = 240;

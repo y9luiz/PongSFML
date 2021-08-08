@@ -6,7 +6,7 @@
 #include "solid_object.h"
 #include "circle.h"
 //Game Object
-class Ball : public sf::CircleShape, SolidObject<Circle>
+class Ball : public sf::CircleShape, public SolidObject<Circle>
 {
 	public:
 		Ball();

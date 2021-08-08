@@ -22,6 +22,7 @@ int main()
 
 	p1.setFillColor(sf::Color(150, 0, 0));
 	p2.setFillColor(sf::Color(0, 0, 150));
+	p1.setSpeed(PADDLE_SPEED);
 	ball.setFillColor(sf::Color(0, 0, 150));
 
 	while (window.isOpen())
@@ -32,6 +33,18 @@ int main()
 			{
 				window.close();
 			}
+			if (event.KeyPressed)
+			{
+				if (event.key.code == sf::Keyboard::Up)
+				{
+					p1.moveUp();
+				}
+				else if (event.key.code == sf::Keyboard::Down)
+				{
+					p1.moveDown();
+				}
+			}
+			
 		}
 	
 		// clear the window with black color
@@ -44,9 +57,7 @@ int main()
 		window.draw(p2);
 		window.draw(ball);
 
-
 		// end the current frame
-
 		window.display();
 	}
 
