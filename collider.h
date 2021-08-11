@@ -34,7 +34,7 @@ class Collider
 			shape.reset();
 		}
 
-		void checkCollision(std::shared_ptr<sf::Shape> object)
+		bool checkCollision(std::shared_ptr<sf::Shape> object)
 		{
 			auto tgt_bound = object->getGlobalBounds();
 
@@ -46,10 +46,14 @@ class Collider
 					
 					if (tgt_bound.intersects(src_bound))
 					{
-						std::cout << "colidiu\n";
+						return true;
 					}
 				}
 			}
+			return false;
+		}
+		std::vector<std::shared_ptr<sf::Shape>> get() {
+			return shapes_;
 		}
 	protected:
 		std::vector<std::shared_ptr<sf::Shape>> shapes_;

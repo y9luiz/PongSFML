@@ -58,10 +58,18 @@ int main()
 
 		// draw everything here...
 
+		if (ball->checkCollision(c.get()))
+		{
+			cout << "colidiu metodo 1\n";
+		}
 		for (const auto& shape : c)
 		{
 			window.draw(*shape);
-			c.checkCollision(shape);
+			if (c.checkCollision(shape))
+			{
+				cout << "colidiu metodo 2\n";
+
+			}
 		}
 	  
 		// end the current frame

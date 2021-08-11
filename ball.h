@@ -13,7 +13,7 @@ class Ball : public sf::CircleShape,  Movable
 		Ball(const  sf::Vector2f& center, const float radius);
 		Ball(const float x, const float y, const float radius);
 		~Ball();
+		bool checkCollision(std::vector<std::shared_ptr<sf::Shape>>& shapes) override;
 protected:
 	sf::Texture texture_;
-	bool checkCollision(std::vector<std::shared_ptr<sf::Shape>>& shapes) override;
 };

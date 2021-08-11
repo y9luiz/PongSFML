@@ -22,5 +22,18 @@ Ball::~Ball()
 }
 bool Ball::checkCollision(std::vector<std::shared_ptr<sf::Shape>>& shapes) 
 {
+	auto tgt_bound = this->getGlobalBounds();
+
+	for (const auto& shape : shapes)
+	{
+		if (shape.get() != (this))
+		{
+			auto src_bound = shape->getGlobalBounds();
+			if (tgt_bound.intersects(src_bound))
+			{
+				return true;
+			}
+		}
+	}
 	return false;
 }
