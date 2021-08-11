@@ -1,22 +1,20 @@
 #include "paddle.h"
 
-Paddle::Paddle() : sf::RectangleShape()
-{
 
-}
-Paddle::Paddle(const sf::Rect<float> & r) : sf::RectangleShape()
+Paddle::Paddle(const sf::Rect<float> & r) : sf::RectangleShape(),
+		Movable(dynamic_cast<sf::Shape*> (this), sf::Vector2f(r.left, r.top))
 {
-	Paddle::geometric_shape_ = r;
 	sf::Vector2f size(r.width, r.height);
 	this->setSize(size);
-	this->setPosition(r.left, r.top);
 }
-Paddle::Paddle(const float x, const float y, const  sf::Vector2f& size) : sf::RectangleShape(size)
+Paddle::Paddle(const float x, const float y, const  sf::Vector2f& size) : 
+	sf::RectangleShape(size),
+	Movable(dynamic_cast<sf::Shape*> (this), sf::Vector2f(x, y))
 {
-	this->setPosition(sf::Vector2f(x, y));
 }
 Paddle::Paddle(const float x, const float y, const float width, const float height) : 
-	sf::RectangleShape(sf::Vector2f (x,y))
+	sf::RectangleShape(sf::Vector2f (x,y)), 
+	Movable(dynamic_cast<sf::Shape*> (this), sf::Vector2f(x, y))
 {
 	sf::Vector2f size(width, height);
 	this->setSize(size);
@@ -26,11 +24,15 @@ Paddle::~Paddle()
 {
 	
 }
-bool Paddle::checkCollision(sf::Rect<float> & geometric_shape)
+
+bool Paddle::checkCollision(std::vector<std::shared_ptr<sf::Shape>>& shapes)
 {
-	return Paddle::geometric_shape_.intersects(geometric_shape);
-}
-bool Paddle::checkCollision(float x, float y)
-{
-	return geometric_shape_.contains(sf::Vector2f(x,y));
+	for (const auto & shape : shapes)
+	{
+		if (shape.get() == (this))
+		{
+
+		}
+	}
+	return false;
 }

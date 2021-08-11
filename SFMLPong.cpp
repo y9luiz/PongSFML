@@ -5,25 +5,30 @@
 #include <SFML/Graphics.hpp>
 #include "paddle.h"
 #include "ball.h"
+#include "collider.h"
+
 using namespace std;
-
-
 
 int main()
 {
+	Collider c;
 
 	sf::RenderWindow window(sf::VideoMode(WINDOW_WIDTH, WINDOW_HEIGHT), "Pong");
 
+	std::shared_ptr<Paddle> player1 = std::make_shared<Paddle>(PLAYER_1_RECT);
+	std::shared_ptr<Paddle> player2 = std::make_shared<Paddle>(PLAYER_2_RECT);
+	std::shared_ptr <Ball> ball = std::make_shared<Ball>(BALL_INIT_POSITION,BALL_RADIUS);
+	
+	c.add(player1);
+	c.add(player2);
+	c.add(ball);
+
+	player1->setFillColor(sf::Color(150, 0, 0));
+	player1->setSpeed(PADDLE_SPEED);
+	player2->setFillColor(sf::Color(0, 0, 150));
+	ball->setFillColor(sf::Color(0, 0, 150));
+	
 	sf::Event event;
-
-	Paddle p1(PLAYER_1_RECT),p2(PLAYER_2_RECT);
-
-	Ball ball(BALL_INIT_POSITION,BALL_RADIUS);
-
-	p1.setFillColor(sf::Color(150, 0, 0));
-	p2.setFillColor(sf::Color(0, 0, 150));
-	p1.setSpeed(PADDLE_SPEED);
-	ball.setFillColor(sf::Color(0, 0, 150));
 
 	while (window.isOpen())
 	{
@@ -35,13 +40,14 @@ int main()
 			}
 			if (event.KeyPressed)
 			{
+
 				if (event.key.code == sf::Keyboard::Up)
 				{
-					p1.moveUp();
+					player1->moveUp();
 				}
 				else if (event.key.code == sf::Keyboard::Down)
 				{
-					p1.moveDown();
+					player1->moveDown();
 				}
 			}
 			
@@ -51,12 +57,13 @@ int main()
 		window.clear(sf::Color::Black);
 
 		// draw everything here...
-	   // window.draw(...);
-		
-		window.draw(p1);
-		window.draw(p2);
-		window.draw(ball);
 
+		for (const auto& shape : c)
+		{
+			window.draw(*shape);
+			c.checkCollision(shape);
+		}
+	  
 		// end the current frame
 		window.display();
 	}
