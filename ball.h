@@ -5,6 +5,7 @@
 #include <SFML/System/Vector2.hpp>
 #include "circle.h"
 #include "movable.h"
+#include <random>
 //Game Object
 class Ball : public sf::CircleShape, public Movable
 {
@@ -19,4 +20,6 @@ class Ball : public sf::CircleShape, public Movable
 	protected:
 		sf::Texture texture_;
 		bool collided_;
+		std::default_random_engine generator;
+
 };

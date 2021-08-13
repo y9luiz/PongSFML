@@ -10,6 +10,7 @@ Ball::Ball(const sf::Vector2f& center, const float radius) :
 	CircleShape(radius),
 	Movable(dynamic_cast<sf::Shape*>(this), center)
 {
+
 }
 Ball::Ball(const float x, const float y, const float radius) :
 	CircleShape(radius),
@@ -54,14 +55,19 @@ void Ball::autoMove()
 	};
 	auto change_direction_y = [&]()
 	{
-		if (direction_x_y_.second == DirectionY::UP)
+		std::uniform_int_distribution<int> distribution(0, 1);
+		int direction = distribution(generator);
+		switch (direction)
 		{
-			direction_x_y_.second = DirectionY::DOWN;
+			case 0:
+				direction_x_y_.second = DirectionY::UP;
+				break;
+			case 1:
+				direction_x_y_.second = DirectionY::DOWN;
+			default:
+				break;
 		}
-		else
-		{
-			direction_x_y_.second = DirectionY::UP;
-		}
+		
 	};
 		if (!collided_)
 		{

@@ -75,7 +75,7 @@ int main()
 	  
 		// end the current frame
 		window.display();
-		this_thread::sleep_for(200ms);
+		this_thread::sleep_for(33ms);
 
 	}
 
