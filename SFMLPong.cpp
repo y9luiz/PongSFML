@@ -6,9 +6,10 @@
 #include "paddle.h"
 #include "ball.h"
 #include "collider.h"
-
+#include <chrono>
+#include <thread>
 using namespace std;
-
+using namespace chrono_literals;
 int main()
 {
 	Collider c;
@@ -26,8 +27,9 @@ int main()
 	player1->setFillColor(sf::Color(150, 0, 0));
 	player1->setSpeed(PADDLE_SPEED);
 	player2->setFillColor(sf::Color(0, 0, 150));
+
 	ball->setFillColor(sf::Color(0, 0, 150));
-	
+	ball->setSpeed(BALL_SPEED);
 	sf::Event event;
 
 	while (window.isOpen())
@@ -40,7 +42,6 @@ int main()
 			}
 			if (event.KeyPressed)
 			{
-
 				if (event.key.code == sf::Keyboard::Up)
 				{
 					player1->moveUp();
@@ -50,9 +51,9 @@ int main()
 					player1->moveDown();
 				}
 			}
-			
 		}
-	
+		ball->autoMove();
+
 		// clear the window with black color
 		window.clear(sf::Color::Black);
 
@@ -74,6 +75,8 @@ int main()
 	  
 		// end the current frame
 		window.display();
+		this_thread::sleep_for(200ms);
+
 	}
 
 	return 0;
