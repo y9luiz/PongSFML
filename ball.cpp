@@ -1,4 +1,9 @@
 #include "ball.h"
+#include <chrono>
+#include <iostream>
+
+const int seed = std::chrono::system_clock::now().time_since_epoch().count();
+std::default_random_engine Ball::generator(seed);
 
 Ball::Ball(const Circle& c) :
 	CircleShape(c.getRadius()),
@@ -10,7 +15,6 @@ Ball::Ball(const sf::Vector2f& center, const float radius) :
 	CircleShape(radius),
 	Movable(dynamic_cast<sf::Shape*>(this), center)
 {
-
 }
 Ball::Ball(const float x, const float y, const float radius) :
 	CircleShape(radius),
@@ -69,15 +73,19 @@ void Ball::autoMove()
 		}
 		
 	};
-		if (!collided_)
-		{
-			moveByDirection();
-		}
-		else 
-		{
-			change_direction_x();
-			change_direction_y();
-			collided_ = false;
-			autoMove();
-		}
+	if (position_.x < 0)
+	{
+		restartPosistion();
+	}
+	if (!collided_)
+	{
+		moveByDirection();
+	}
+	else 
+	{
+		change_direction_x();
+		change_direction_y();
+		collided_ = false;
+		autoMove();
+	}
 }

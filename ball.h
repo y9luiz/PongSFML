@@ -20,6 +20,6 @@ class Ball : public sf::CircleShape, public Movable
 	protected:
 		sf::Texture texture_;
 		bool collided_;
-		std::default_random_engine generator;
+		static std::default_random_engine generator;
 
 };

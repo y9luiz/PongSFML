@@ -19,12 +19,14 @@ class Movable
 			shape_ = shape_ptr;	
 			shape_->setPosition(position);
 			position_ = position;
+			origin_ = position;
 
 		}
 		Movable(sf::Shape * shape_ptr, const sf::Vector2f && position)
 		{
 			shape_ = shape_ptr;
 			position_ = position;
+			origin_ = position;
 			shape_->setPosition(position_);
 		}
 		inline void setSpeed(const sf::Vector2f& speed)
@@ -94,16 +96,21 @@ class Movable
 			}
 		}
 		
-		
 	protected:
 		sf::Shape* shape_;
 		sf::Vector2f speed_;
 		sf::Vector2f position_;
+		sf::Vector2f origin_;
 		virtual bool checkCollision(std::vector<std::shared_ptr<sf::Shape>> & shapes) = 0;
 
 		enum class DirectionX {RIGHT,LEFT, NONE};
 		enum class DirectionY { UP, DOWN, NONE};
-		std::pair <DirectionX,DirectionY> direction_x_y_;
+		std::pair <DirectionX, DirectionY> direction_x_y_;
+
+		inline void restartPosistion()
+		{
+			position_ = origin_;
+		}
 
 
 };
