@@ -86,6 +86,7 @@ void Ball::autoMove()
 		change_direction_x();
 		change_direction_y();
 		collided_ = false;
-		autoMove();
+		// to avoid "enter inside other objects"
+		moveByDirection();
 	}
 }

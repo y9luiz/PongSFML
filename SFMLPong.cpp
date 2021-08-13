@@ -52,7 +52,6 @@ int main()
 				}
 			}
 		}
-		ball->autoMove();
 
 		// clear the window with black color
 		window.clear(sf::Color::Black);
@@ -72,6 +71,8 @@ int main()
 
 			}
 		}
+		ball->autoMove();
+
 	  
 		// end the current frame
 		window.display();
