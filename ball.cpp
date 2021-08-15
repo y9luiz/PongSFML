@@ -44,49 +44,49 @@ bool Ball::checkCollision(std::vector<std::shared_ptr<sf::Shape>>& shapes)
 	collided_ = false;
 	return false;
 }
-void Ball::autoMove()
+void autoMove(Ball & ball)
 {
 	auto change_direction_x = [&]()
 	{
-		if (direction_x_y_.first == DirectionX::LEFT)
+		if (ball.direction_x_y_.first == ball.DirectionX::LEFT)
 		{
-			direction_x_y_.first = DirectionX::RIGHT;
+			ball.direction_x_y_.first = ball.DirectionX::RIGHT;
 		}
 		else
 		{
-			direction_x_y_.first = DirectionX::LEFT;
+			ball.direction_x_y_.first = ball.DirectionX::LEFT;
 		}
 	};
 	auto change_direction_y = [&]()
 	{
 		std::uniform_int_distribution<int> distribution(0, 1);
-		int direction = distribution(generator);
+		int direction = distribution(ball.generator);
 		switch (direction)
 		{
 			case 0:
-				direction_x_y_.second = DirectionY::UP;
+				ball.direction_x_y_.second = ball.DirectionY::UP;
 				break;
 			case 1:
-				direction_x_y_.second = DirectionY::DOWN;
+				ball.direction_x_y_.second = ball.DirectionY::DOWN;
 			default:
 				break;
 		}
 		
 	};
-	if (position_.x < 0)
+	if (ball.position_.x < 0)
 	{
-		restartPosistion();
+		ball. restartPosistion();
 	}
-	if (!collided_)
+	if (!ball.collided_)
 	{
-		moveByDirection();
+		ball.moveByDirection();
 	}
 	else 
 	{
 		change_direction_x();
 		change_direction_y();
-		collided_ = false;
+		ball.collided_ = false;
 		// to avoid "enter inside other objects"
-		moveByDirection();
+		ball.moveByDirection();
 	}
 }

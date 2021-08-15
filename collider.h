@@ -2,10 +2,6 @@
 #include <iostream>
 #include <SFML/Graphics.hpp>
 #include <vector>
-void hello(std::shared_ptr<sf::Shape> s)
-{
-
-}
 class Collider
 {
 	typedef std::vector<std::shared_ptr<sf::Shape>>::iterator iterator;
