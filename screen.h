@@ -1,7 +1,7 @@
 #pragma once
 #include <memory>
-#include <SFML\Graphics.hpp>
-#include <SFML\System\Clock.hpp>
+#include <SFML/Graphics.hpp>
+#include <SFML/System/Clock.hpp>
 class Screen : public sf::RenderWindow
 {
 	public:

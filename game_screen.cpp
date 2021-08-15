@@ -60,13 +60,15 @@ void GameScreen::handleInput()
 };
 void GameScreen::run()
 {
+	auto objects = collider_.get();
 	while (isOpen())
 	{
 		handleInput();
 		clear(sf::Color::Black);
 		autoMove(*ball_);
 		
-		ball_->checkCollision(collider_.get());
+		ball_->checkCollision(objects);
+		
 		// draw everything...
 		for (auto& shape : collider_)
 		{

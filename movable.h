@@ -2,7 +2,7 @@
 #include <iostream>
 #include <SFML/Graphics.hpp>
 #include <functional>
-
+#include <memory>
 class Movable
 {
 	public:

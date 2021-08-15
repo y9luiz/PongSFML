@@ -14,7 +14,7 @@ class Ball : public sf::CircleShape, public Movable
 		Ball(const  sf::Vector2f& center, const float radius);
 		Ball(const float x, const float y, const float radius);
 		~Ball();
-		bool checkCollision(std::vector<std::shared_ptr<sf::Shape>>& shapes) override;
+		bool checkCollision(std::vector<std::shared_ptr<sf::Shape>> & shapes) override;
 		void friend autoMove(Ball & ball);
 
 	protected:

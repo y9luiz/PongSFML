@@ -25,7 +25,7 @@ Ball::~Ball()
 {
 
 }
-bool Ball::checkCollision(std::vector<std::shared_ptr<sf::Shape>>& shapes)
+bool Ball::checkCollision(std::vector<std::shared_ptr<sf::Shape>> & shapes)
 {
 	auto tgt_bound = this->getGlobalBounds();
 
