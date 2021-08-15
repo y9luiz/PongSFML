@@ -1,6 +1,4 @@
-#pragma once
 #include "game_screen.h"
-#include <iostream>
 #include <chrono>
 #include <thread>
 using namespace std::chrono_literals;
