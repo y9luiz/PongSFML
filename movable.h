@@ -3,6 +3,7 @@
 #include <SFML/Graphics.hpp>
 #include <functional>
 #include <memory>
+#include "defs.h"
 class Movable
 {
 	public:
@@ -66,15 +67,19 @@ class Movable
 		}
 		inline void moveUp()
 		{
-			direction_x_y_.second = DirectionY::UP;
-			position_.y -= speed_.y;
-			shape_->setPosition(position_);
+			if(position_.y - speed_.y >= 0) {
+				direction_x_y_.second = DirectionY::UP;
+				position_.y -= speed_.y;
+				shape_->setPosition(position_);
+			}
 		}
 		inline void moveDown()
 		{
-			direction_x_y_.second = DirectionY::DOWN;
-			position_.y += speed_.y;
-			shape_->setPosition(position_);
+			if(position_.y + speed_.y + PADDLE_SIZE.y <= WINDOW_HEIGHT) {
+				direction_x_y_.second = DirectionY::DOWN;
+				position_.y += speed_.y;
+				shape_->setPosition(position_);
+			}
 		}
 		inline void moveByDirection()
 		{
