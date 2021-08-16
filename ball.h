@@ -5,6 +5,7 @@
 #include <SFML/System/Vector2.hpp>
 #include "circle.h"
 #include "movable.h"
+#include "defs.h"
 #include <random>
 //Game Object
 class Ball : public sf::CircleShape, public Movable

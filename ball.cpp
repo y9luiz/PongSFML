@@ -44,6 +44,7 @@ bool Ball::checkCollision(std::vector<std::shared_ptr<sf::Shape>> & shapes)
 	collided_ = false;
 	return false;
 }
+
 void autoMove(Ball & ball)
 {
 	auto change_direction_x = [&]()
@@ -77,6 +78,17 @@ void autoMove(Ball & ball)
 	{
 		ball. restartPosistion();
 	}
+
+	//checks if hit a wall on Y
+	if(ball.position_.y <= 0 and ball.direction_x_y_.second == ball.DirectionY::UP)
+	{
+		ball.direction_x_y_.second = ball.DirectionY::DOWN;
+	}
+	else if(ball.position_.y + BALL_RADIUS >= WINDOW_HEIGHT and ball.direction_x_y_.second == ball.DirectionY::DOWN)
+	{
+		ball.direction_x_y_.second = ball.DirectionY::UP;
+	}
+
 	if (!ball.collided_)
 	{
 		ball.moveByDirection();
