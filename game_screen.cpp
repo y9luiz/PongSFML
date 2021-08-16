@@ -53,6 +53,15 @@ void GameScreen::handleInput()
 			{
 				player1_->moveDown();
 			}
+
+			if (event.key.code == sf::Keyboard::W)
+			{
+				player2_->moveUp();
+			}
+			else if (event.key.code == sf::Keyboard::S)
+			{
+				player2_->moveDown();
+			}
 		}
 	}
 };
