@@ -1,12 +1,12 @@
 #include "game_screen.h"
 #include <chrono>
 #include <thread>
+#include <iostream>
 using namespace std::chrono_literals;
 
 GameScreen::GameScreen(const int width, const int height, const std::string tittle) : Screen(width,height,tittle), tittle_(tittle)
 {
-	
-	customizePlayer1();
+    customizePlayer1();
 	customizePlayer2();
 	customizeBall();
 	collider_.add(player1_);
@@ -76,6 +76,18 @@ void GameScreen::checkOutOfScreen(std::shared_ptr<Movable> & obj)
 
 void GameScreen::run()
 {
+    sf::Font font;
+    std::string font_path = "../" + FONT_DIR;
+	font_path += "arial.ttf";
+    if(!font.loadFromFile(font_path))
+    {
+        std::cout << "dammit \n";
+    }
+    score_board_.setFont(font);
+    score_board_.setCharacterSize(48);
+    score_board_.setString("0 0");
+	score_board_.setFillColor(sf::Color::Red);
+
 	auto objects = collider_.get();
 	while (isOpen())
 	{
@@ -92,7 +104,7 @@ void GameScreen::run()
 			draw(*object);
 		}
 		
-		
+	    draw(score_board_);	
 		display();
 		std::this_thread::sleep_for(33ms);
 	}

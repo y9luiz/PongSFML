@@ -21,4 +21,5 @@ class GameScreen : public Screen
 		std::shared_ptr<Ball> ball_;
 		std::shared_ptr<Paddle> player1_;
 		std::shared_ptr<Paddle> player2_;
+        sf::Text score_board_;
 };
