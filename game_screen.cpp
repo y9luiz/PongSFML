@@ -1,6 +1,4 @@
-#pragma once
 #include "game_screen.h"
-#include <iostream>
 #include <chrono>
 #include <thread>
 using namespace std::chrono_literals;
@@ -58,6 +56,16 @@ void GameScreen::handleInput()
 		}
 	}
 };
+void GameScreen::checkOutOfScreen(std::shared_ptr<Movable> & obj)
+{
+	sf::Vector2 pos = obj->getPosition();
+
+	if(pos.x<0 || pos.y<0 || pos.x>WINDOW_WIDTH || pos.y>WINDOW_HEIGHT)
+	{
+		obj->restartPosistion();
+	}
+}
+
 void GameScreen::run()
 {
 	auto objects = collider_.get();
@@ -68,11 +76,12 @@ void GameScreen::run()
 		autoMove(*ball_);
 		
 		ball_->checkCollision(objects);
-		
+		auto obj = std::dynamic_pointer_cast<Movable>(ball_);
+		checkOutOfScreen(obj);
 		// draw everything...
-		for (auto& shape : collider_)
+		for (auto& object : objects)
 		{
-			draw(*shape);
+			draw(*object);
 		}
 		
 		

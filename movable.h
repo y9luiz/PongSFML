@@ -100,7 +100,15 @@ class Movable
 				moveDown();
 			}
 		}
-		
+		inline sf::Vector2f getPosition()
+		{
+			return position_;
+		}
+		inline void restartPosistion()
+		{
+			position_ = origin_;
+		}
+
 	protected:
 		sf::Shape* shape_;
 		sf::Vector2f speed_;
@@ -111,11 +119,6 @@ class Movable
 		enum class DirectionX {RIGHT,LEFT, NONE};
 		enum class DirectionY { UP, DOWN, NONE};
 		std::pair <DirectionX, DirectionY> direction_x_y_;
-
-		inline void restartPosistion()
-		{
-			position_ = origin_;
-		}
 
 
 };

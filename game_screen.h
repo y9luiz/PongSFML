@@ -14,8 +14,8 @@ class GameScreen : public Screen
 		void customizePlayer1();
 		void customizePlayer2();
 		void customizeBall();
-
 		void handleInput() override;
+		void checkOutOfScreen(std::shared_ptr<Movable> & obj);
 		Collider collider_;
 		std::string tittle_;
 		std::shared_ptr<Ball> ball_;
