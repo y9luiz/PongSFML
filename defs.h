@@ -3,11 +3,11 @@
 #include <SFML/Graphics/Rect.hpp>
 #include <SFML/Graphics/Color.hpp>
 const int WINDOW_WIDTH = 640;
-const int WINDOW_HEIGHT = 480;
+const int WINDOW_HEIGHT = 400;
 const sf::Vector2f PADDLE_SIZE(30,150);
 
 // PLAYERS DEFINITIONS
-const sf::Vector2f PADDLE_SPEED(1, 10);;
+const sf::Vector2f PADDLE_SPEED(1, 10);
 
 // PLAYER 1 DEFINITIONS 
 const float PLAYER_1_X_POS = 0;

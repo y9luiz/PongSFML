@@ -45,20 +45,20 @@ void GameScreen::handleInput()
 		}
 		if (event.KeyPressed)
 		{
-			if (event.key.code == sf::Keyboard::Up)
+			if (event.key.code == sf::Keyboard::Up and player1_->getPosition_().y - player1_->getSpeed().y >= 0)
 			{
 				player1_->moveUp();
 			}
-			else if (event.key.code == sf::Keyboard::Down)
+			else if (event.key.code == sf::Keyboard::Down and player1_->getPosition_().y + player1_->getSpeed().y + PADDLE_SIZE.y <= WINDOW_HEIGHT)
 			{
 				player1_->moveDown();
 			}
 
-			if (event.key.code == sf::Keyboard::W)
+			if (event.key.code == sf::Keyboard::W and player2_->getPosition_().y - player2_->getSpeed().y >= 0)
 			{
 				player2_->moveUp();
 			}
-			else if (event.key.code == sf::Keyboard::S)
+			else if (event.key.code == sf::Keyboard::S and player2_->getPosition_().y + player2_->getSpeed().y + PADDLE_SIZE.y <= WINDOW_HEIGHT)
 			{
 				player2_->moveDown();
 			}
@@ -67,11 +67,26 @@ void GameScreen::handleInput()
 };
 void GameScreen::checkOutOfScreen(std::shared_ptr<Movable> & obj)
 {
-	sf::Vector2 pos = obj->getPosition();
+	sf::Vector2 pos = obj->getPosition_();
 
-	if(pos.x<0 || pos.y<0 || pos.x>WINDOW_WIDTH || pos.y>WINDOW_HEIGHT)
+	if(pos.x < 0)
 	{
 		obj->restartPosistion();
+		//todo: contar ponto pro player2
+	}
+	else if (pos.x>WINDOW_WIDTH)
+	{
+		obj->restartPosistion();
+		//todo: contar ponto pro player1
+	}
+
+	if(pos.y <= 0)
+	{
+		obj->changeDirectionToDown();
+	}
+	else if(pos.y + 2 * BALL_RADIUS >= WINDOW_HEIGHT)
+	{
+		obj->changeDirectionToUp();
 	}
 }
 

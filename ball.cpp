@@ -74,21 +74,7 @@ void autoMove(Ball & ball)
 		}
 		
 	};
-	if (ball.position_.x < 0)
-	{
-		ball. restartPosistion();
-	}
-
-	//checks if hit a wall on Y
-	if(ball.position_.y <= 0 and ball.direction_x_y_.second == ball.DirectionY::UP)
-	{
-		ball.direction_x_y_.second = ball.DirectionY::DOWN;
-	}
-	else if(ball.position_.y + BALL_RADIUS >= WINDOW_HEIGHT and ball.direction_x_y_.second == ball.DirectionY::DOWN)
-	{
-		ball.direction_x_y_.second = ball.DirectionY::UP;
-	}
-
+	
 	if (!ball.collided_)
 	{
 		ball.moveByDirection();
