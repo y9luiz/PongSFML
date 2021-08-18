@@ -95,13 +95,23 @@ class Movable
 				moveDown();
 			}
 		}
-		inline sf::Vector2f getPosition()
+		inline sf::Vector2f getPosition_()
 		{
 			return position_;
+		}
+		inline sf::Vector2f getSpeed()
+		{
+			return speed_;
 		}
 		inline void restartPosistion()
 		{
 			position_ = origin_;
+		}
+		inline void changeDirectionToUp() {
+			direction_x_y_.second = DirectionY::UP;
+		}
+		inline void changeDirectionToDown() {
+			direction_x_y_.second = DirectionY::DOWN;
 		}
 
 	protected:

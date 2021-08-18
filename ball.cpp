@@ -44,6 +44,7 @@ bool Ball::checkCollision(std::vector<std::shared_ptr<sf::Shape>> & shapes)
 	collided_ = false;
 	return false;
 }
+
 void autoMove(Ball & ball)
 {
 	auto change_direction_x = [&]()
@@ -73,10 +74,7 @@ void autoMove(Ball & ball)
 		}
 		
 	};
-	if (ball.position_.x < 0)
-	{
-		ball. restartPosistion();
-	}
+	
 	if (!ball.collided_)
 	{
 		ball.moveByDirection();

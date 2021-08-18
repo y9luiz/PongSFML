@@ -5,21 +5,21 @@
 
 // SCREEN DEFINITIONS
 const int WINDOW_WIDTH = 640;
-const int WINDOW_HEIGHT = 480;
+const int WINDOW_HEIGHT = 400;
 const sf::Vector2f PADDLE_SIZE(30,150);
 const std::string FONT_DIR = "Assets/";
 
 // PLAYERS DEFINITIONS
-const sf::Vector2f PADDLE_SPEED(1, 10);;
+const sf::Vector2f PADDLE_SPEED(1, 10);
 
 // PLAYER 1 DEFINITIONS 
-const float PLAYER_1_X_POS = 100;
+const float PLAYER_1_X_POS = 0;
 const float PLAYER_1_Y_POS = 240;
 const sf::Rect<float> PLAYER_1_RECT(PLAYER_1_X_POS, PLAYER_1_Y_POS, PADDLE_SIZE.x, PADDLE_SIZE.y);
 const sf::Color PLAYER_1_COLOR = sf::Color(255, 0, 0);
 
 // PLAYER 2 DEFINITIONS 
-const float PLAYER_2_X_POS = 500;
+const float PLAYER_2_X_POS = WINDOW_WIDTH - PADDLE_SIZE.x;
 const float PLAYER_2_Y_POS = 120;
 const sf::Rect<float> PLAYER_2_RECT(PLAYER_2_X_POS, PLAYER_2_Y_POS, PADDLE_SIZE.x, PADDLE_SIZE.y);
 const sf::Color PLAYER_2_COLOR = sf::Color(0, 0, 255);
