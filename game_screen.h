@@ -14,6 +14,7 @@ class GameScreen : public Screen
 		void customizePlayer1();
 		void customizePlayer2();
 		void customizeBall();
+		void customizeScore();
 		void handleInput() override;
 		void checkOutOfScreen(std::shared_ptr<Movable> & obj);
 		Collider collider_;
@@ -22,4 +23,5 @@ class GameScreen : public Screen
 		std::shared_ptr<Paddle> player1_;
 		std::shared_ptr<Paddle> player2_;
         sf::Text score_board_;
+		sf::Font score_font_;
 };

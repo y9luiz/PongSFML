@@ -9,6 +9,7 @@ GameScreen::GameScreen(const int width, const int height, const std::string titt
     customizePlayer1();
 	customizePlayer2();
 	customizeBall();
+	customizeScore();
 	collider_.add(player1_);
 	collider_.add(player2_);
 	collider_.add(ball_);
@@ -33,6 +34,20 @@ void GameScreen::customizeBall()
 	ball_ = std::make_shared<Ball>(BALL_INIT_POSITION, BALL_RADIUS);
 	ball_->setFillColor(BALL_COLOR);
 	ball_->setSpeed(BALL_SPEED);
+}
+
+void GameScreen::customizeScore()
+{	
+    if(!score_font_.loadFromFile(FONT_PATH))
+    {
+        std::cout << "Erro ao tentar carregar a fonte. Path:" << FONT_PATH << "\n";
+    }
+    
+	score_board_.setFont(score_font_);
+    score_board_.setCharacterSize(48);
+    score_board_.setString("0 : 0");
+	score_board_.setFillColor(sf::Color::Red);
+	score_board_.setPosition(50, 20);
 }
 
 void GameScreen::handleInput()
@@ -92,18 +107,6 @@ void GameScreen::checkOutOfScreen(std::shared_ptr<Movable> & obj)
 
 void GameScreen::run()
 {
-    sf::Font font;
-    std::string font_path = "../" + FONT_DIR;
-	font_path += "arial.ttf";
-    if(!font.loadFromFile(font_path))
-    {
-        std::cout << "dammit \n";
-    }
-    score_board_.setFont(font);
-    score_board_.setCharacterSize(48);
-    score_board_.setString("0 0");
-	score_board_.setFillColor(sf::Color::Red);
-
 	auto objects = collider_.get();
 	while (isOpen())
 	{

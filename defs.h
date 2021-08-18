@@ -7,7 +7,7 @@
 const int WINDOW_WIDTH = 640;
 const int WINDOW_HEIGHT = 400;
 const sf::Vector2f PADDLE_SIZE(30,150);
-const std::string FONT_DIR = "Assets/";
+const std::string FONT_PATH = "Assets/arial.ttf";
 
 // PLAYERS DEFINITIONS
 const sf::Vector2f PADDLE_SPEED(1, 10);
