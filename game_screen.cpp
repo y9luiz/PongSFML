@@ -2,6 +2,7 @@
 #include <chrono>
 #include <thread>
 #include <iostream>
+#include<string>
 using namespace std::chrono_literals;
 
 GameScreen::GameScreen(const int width, const int height, const std::string tittle) : Screen(width,height,tittle), tittle_(tittle)
@@ -9,7 +10,7 @@ GameScreen::GameScreen(const int width, const int height, const std::string titt
     customizePlayer1();
 	customizePlayer2();
 	customizeBall();
-	customizeScore();
+	initScore();
 	collider_.add(player1_);
 	collider_.add(player2_);
 	collider_.add(ball_);
@@ -36,18 +37,27 @@ void GameScreen::customizeBall()
 	ball_->setSpeed(BALL_SPEED);
 }
 
-void GameScreen::customizeScore()
+void GameScreen::initScore()
 {	
-    if(!score_font_.loadFromFile(FONT_PATH))
+	player1_score_ = 0;
+	player2_score_ = 0;
+
+    if(!score_font_.loadFromFile(FONT_SCORE_PATH))
     {
-        std::cout << "Erro ao tentar carregar a fonte. Path:" << FONT_PATH << "\n";
+        std::cout << "Erro ao tentar carregar a fonte. Path:" << FONT_SCORE_PATH << "\n";
     }
-    
 	score_board_.setFont(score_font_);
-    score_board_.setCharacterSize(48);
-    score_board_.setString("0 : 0");
-	score_board_.setFillColor(sf::Color::Red);
-	score_board_.setPosition(50, 20);
+	score_board_.setCharacterSize(FONT_SCORE_SIZE);
+	score_board_.setFillColor(FONT_SCORE_COLOR);
+	displayScore(0, 0);
+}
+
+void GameScreen::displayScore(int s1, int s2) {
+	score_board_.setString(std::to_string(s1) + " : " + std::to_string(s2));
+
+	sf::FloatRect scoreBounds = score_board_.getLocalBounds(); //pega as delimitacoes do retangulo do texto
+	score_board_.setOrigin(scoreBounds.left + scoreBounds.width / 2, scoreBounds.top + scoreBounds.height / 2);
+	score_board_.setPosition(WINDOW_WIDTH / 2, 30);
 }
 
 void GameScreen::handleInput()
@@ -87,12 +97,14 @@ void GameScreen::checkOutOfScreen(std::shared_ptr<Movable> & obj)
 	if(pos.x < 0)
 	{
 		obj->restartPosistion();
-		//todo: contar ponto pro player2
+		player2_score_++;
+		displayScore(player1_score_, player2_score_);
 	}
 	else if (pos.x>WINDOW_WIDTH)
 	{
 		obj->restartPosistion();
-		//todo: contar ponto pro player1
+		player1_score_++;
+		displayScore(player1_score_, player2_score_);
 	}
 
 	if(pos.y <= 0)

@@ -4,10 +4,12 @@
 #include <SFML/Graphics/Color.hpp>
 
 // SCREEN DEFINITIONS
-const int WINDOW_WIDTH = 640;
-const int WINDOW_HEIGHT = 400;
+const int WINDOW_WIDTH = 700;
+const int WINDOW_HEIGHT = 500;
 const sf::Vector2f PADDLE_SIZE(30,150);
-const std::string FONT_PATH = "Assets/arial.ttf";
+const std::string FONT_SCORE_PATH = "Assets/CollegiateOutlineFLF.ttf";
+const sf::Color FONT_SCORE_COLOR = sf::Color(255, 255, 255);
+const int FONT_SCORE_SIZE = 30;
 
 // PLAYERS DEFINITIONS
 const sf::Vector2f PADDLE_SPEED(1, 10);
