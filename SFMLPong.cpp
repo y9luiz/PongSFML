@@ -13,9 +13,6 @@ using namespace chrono_literals;
 
 int main()
 {
-	//GameScreen game_screen(WINDOW_WIDTH,WINDOW_HEIGHT,"Play");
-	//game_screen.run();
-
 	MenuScreen menu_screen(WINDOW_WIDTH, WINDOW_HEIGHT, "Play");
 	menu_screen.run();
 	GameScreen game_screen(WINDOW_WIDTH, WINDOW_HEIGHT, "Play");
