@@ -45,20 +45,20 @@ void GameScreen::handleInput()
 		}
 		if (event.KeyPressed)
 		{
-			if (event.key.code == sf::Keyboard::Up && player1_->getPosition_().y - player1_->getSpeed().y >= 0)
+			if (event.key.code == sf::Keyboard::W && player1_->getPosition_().y - player1_->getSpeed().y >= 0)
 			{
 				player1_->moveUp();
 			}
-			else if (event.key.code == sf::Keyboard::Down && player1_->getPosition_().y + player1_->getSpeed().y + PADDLE_SIZE.y <= WINDOW_HEIGHT)
+			else if (event.key.code == sf::Keyboard::S && player1_->getPosition_().y + player1_->getSpeed().y + PADDLE_SIZE.y <= WINDOW_HEIGHT)
 			{
 				player1_->moveDown();
 			}
 
-			if (event.key.code == sf::Keyboard::W && player2_->getPosition_().y - player2_->getSpeed().y >= 0)
+			if (event.key.code == sf::Keyboard::Up && player2_->getPosition_().y - player2_->getSpeed().y >= 0)
 			{
 				player2_->moveUp();
 			}
-			else if (event.key.code == sf::Keyboard::S && player2_->getPosition_().y + player2_->getSpeed().y + PADDLE_SIZE.y <= WINDOW_HEIGHT)
+			else if (event.key.code == sf::Keyboard::Down && player2_->getPosition_().y + player2_->getSpeed().y + PADDLE_SIZE.y <= WINDOW_HEIGHT)
 			{
 				player2_->moveDown();
 			}
