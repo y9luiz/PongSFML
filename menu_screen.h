@@ -2,12 +2,12 @@
 #include "screen.h"
 #include "button.h"
 #include <SFML/Graphics.hpp>
-
 class MenuScreen : public Screen 
 {
 
     public:
         MenuScreen(const int width, const int height, const std::string tittle);
+    
 		void run() override;
         inline void setButton(const int x, const int y, const int width, const int height, sf::Texture & texture)
         {

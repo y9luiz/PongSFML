@@ -5,6 +5,7 @@
 #include <thread>
 
 #include "SFMLPong.h"
+#include "screen.h"
 #include "game_screen.h"
 #include "menu_screen.h"
 
@@ -13,10 +14,10 @@ using namespace chrono_literals;
 
 int main()
 {
-	MenuScreen menu_screen(WINDOW_WIDTH, WINDOW_HEIGHT, "Play");
-	menu_screen.run();
-	GameScreen game_screen(WINDOW_WIDTH, WINDOW_HEIGHT, "Play");
-	game_screen.run();
+	std::shared_ptr<Screen> screen_ptr = make_shared<MenuScreen>(WINDOW_WIDTH, WINDOW_HEIGHT, "Play");
+	screen_ptr->run();
+	screen_ptr = make_shared<GameScreen>(WINDOW_WIDTH, WINDOW_HEIGHT, "Play");
+	screen_ptr->run();
 
 	return 0;
 }

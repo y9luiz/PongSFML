@@ -2,7 +2,6 @@
 #include <thread>
 #include <chrono>
 #include "defs.h"
-#include <iostream>
 using namespace std::chrono_literals;
 
 MenuScreen::MenuScreen(const int width, const int height, const std::string tittle)  : Screen(width, height, tittle), tittle_(tittle)
