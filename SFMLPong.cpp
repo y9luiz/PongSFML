@@ -14,10 +14,23 @@ using namespace chrono_literals;
 
 int main()
 {
-	std::shared_ptr<Screen> screen_ptr = make_shared<MenuScreen>(WINDOW_WIDTH, WINDOW_HEIGHT, "Play");
-	screen_ptr->run();
-	screen_ptr = make_shared<GameScreen>(WINDOW_WIDTH, WINDOW_HEIGHT, "Play");
-	screen_ptr->run();
 
+	std::vector<std::shared_ptr<Screen>> screens; 
+	screens.push_back(make_shared<MenuScreen>(WINDOW_WIDTH, WINDOW_HEIGHT, "Play"));
+	screens.push_back(make_shared<GameScreen>(WINDOW_WIDTH, WINDOW_HEIGHT, "Play"));
+
+	std::for_each(screens.begin(), screens.end(), [](std::shared_ptr<Screen> s)
+		{
+			s->setVisible(false);
+		}
+	);
+
+	std::for_each(screens.begin(), screens.end(), [](std::shared_ptr<Screen> s)
+		{
+			s->setVisible(true);
+			s->run();
+		}
+	);
+	
 	return 0;
 }
