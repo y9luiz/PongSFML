@@ -28,7 +28,8 @@ Ball::~Ball()
 bool Ball::checkCollision(std::vector<std::shared_ptr<sf::Shape>> & shapes)
 {
 	auto tgt_bound = this->getGlobalBounds();
-
+	
+	
 	for (const auto& shape : shapes)
 	{
 		if (shape.get() != (this))
@@ -62,6 +63,7 @@ void autoMove(Ball & ball)
 	{
 		std::uniform_int_distribution<int> distribution(0, 1);
 		int direction = distribution(ball.generator);
+
 		switch (direction)
 		{
 			case 0:
@@ -74,17 +76,15 @@ void autoMove(Ball & ball)
 		}
 		
 	};
-	
 	if (!ball.collided_)
 	{
-		ball.moveByDirection();
+		ball.prev_position_ = ball.position_;
 	}
 	else 
-	{
+	{ 
 		change_direction_x();
 		change_direction_y();
 		ball.collided_ = false;
-		// to avoid "enter inside other objects"
-		ball.moveByDirection();
 	}
+	ball.moveByDirection();
 }

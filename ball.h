@@ -22,5 +22,6 @@ class Ball : public sf::CircleShape, public Movable
 		sf::Texture texture_;
 		bool collided_;
 		static std::default_random_engine generator;
+		sf::Vector2f prev_position_;
 
 };
