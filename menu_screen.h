@@ -17,6 +17,7 @@ class MenuScreen : public Screen
         std::shared_ptr<Button> play_button_;
         bool is_running_ = false; 
         void handleInput() override;
-        sf::Texture texture;
+        sf::Texture texture_;
+        std::string tittle_;
 
 };

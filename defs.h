@@ -2,6 +2,10 @@
 #include <SFML/System/Vector2.hpp>
 #include <SFML/Graphics/Rect.hpp>
 #include <SFML/Graphics/Color.hpp>
+
+// ENV DEFINITIONS
+const std::string ASSERTS_PATH = "Assets";
+
 const int WINDOW_WIDTH = 640;
 const int WINDOW_HEIGHT = 480;
 const sf::Vector2f PADDLE_SIZE(30,150);
