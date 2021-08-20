@@ -36,6 +36,11 @@ void GameScreen::customizeBall()
 	ball_->setFillColor(BALL_COLOR);
 	ball_->setSpeed(BALL_SPEED);
 }
+void GameScreen::customizeButton()
+{
+	texture_.loadFromFile(ASSERTS_PATH + "/play_button.png");
+	button_ = std::make_shared<Button>((WINDOW_WIDTH - 150) / 2, WINDOW_HEIGHT / 2 - 40, 150, 40, texture_);
+}
 void GameScreen::initScore()
 {
 	player1_score_ = 0;
