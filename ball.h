@@ -1,8 +1,8 @@
 #pragma once
 #include <SFML/Graphics/CircleShape.hpp>
 #include <SFML/Graphics.hpp>
-
 #include <SFML/System/Vector2.hpp>
+
 #include "circle.h"
 #include "movable.h"
 #include "defs.h"
