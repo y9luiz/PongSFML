@@ -8,16 +8,14 @@
 #include "screen.h"
 #include "game_screen.h"
 #include "menu_screen.h"
-
+#include "scene.h"
 using namespace std;
 using namespace chrono_literals;
 
 int main()
 {
-
 	std::vector<std::shared_ptr<Screen>> screens; 
-	screens.push_back(make_shared<MenuScreen>(WINDOW_WIDTH, WINDOW_HEIGHT, "Play"));
-	screens.push_back(make_shared<GameScreen>(WINDOW_WIDTH, WINDOW_HEIGHT, "Play"));
+	screens.push_back(GameScreen::create(WINDOW_WIDTH, WINDOW_HEIGHT, "Play"));
 
 	std::for_each(screens.begin(), screens.end(), [](std::shared_ptr<Screen> s)
 		{

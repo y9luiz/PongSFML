@@ -5,14 +5,16 @@ using namespace std::chrono_literals;
 
 GameScreen::GameScreen(const int width, const int height, const std::string tittle) : Screen(width,height,tittle), tittle_(tittle)
 {
-	
+	auto ptr = dynamic_cast<Screen*>(this);
+
 	customizePlayer1();
 	customizePlayer2();
 	customizeBall();
-	collider_.add(player1_);
-	collider_.add(player2_);
-	collider_.add(ball_);
+	scene_ = std::make_shared<Scene>(ptr);
 
+	scene_->addObject(player1_);
+	scene_->addObject(player2_);
+	scene_->addObject(ball_);
 }
 void GameScreen::customizePlayer1()
 {
@@ -34,7 +36,12 @@ void GameScreen::customizeBall()
 	ball_->setFillColor(BALL_COLOR);
 	ball_->setSpeed(BALL_SPEED);
 }
-
+std::shared_ptr<Button> customizeButton()
+{
+	sf::Texture texture;
+	auto button = std::make_shared<Button>(75,150,150,40,texture);
+	return button;
+}
 void GameScreen::handleInput()
 {
 	while (pollEvent(event))
@@ -73,12 +80,17 @@ void GameScreen::checkOutOfScreen(std::shared_ptr<Movable> & obj)
 		obj->restartPosistion();
 	}
 }
+void createMenuScene(GameScreen & game_screen)
+{
+	game_screen.scene_->addObject( std::dynamic_pointer_cast<sf::Shape>(customizeButton()));
+}
 
 void GameScreen::run()
 {
-	auto objects = collider_.get();
+	auto objects = scene_->getObjects();
 	while (isOpen())
 	{
+		
 		handleInput();
 		clear(sf::Color::Black);
 		autoMove(*ball_);
@@ -87,11 +99,7 @@ void GameScreen::run()
 		auto obj = std::dynamic_pointer_cast<Movable>(ball_);
 		checkOutOfScreen(obj);
 		// draw everything...
-		for (auto& object : objects)
-		{
-			draw(*object);
-		}
-		
+		scene_->drawObjects();
 		
 		display();
 		std::this_thread::sleep_for(33ms);
