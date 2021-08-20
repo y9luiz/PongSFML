@@ -25,6 +25,9 @@ class GameScreen : public Screen, public std::enable_shared_from_this<GameScreen
 		{
 			scene_type_ = scene_type;
 		}
+	protected:
+		bool paused;
+
 	private:
 		GameScreen(const int width, const int height, const std::string tittle);
 		void createMenuScene();
@@ -35,9 +38,12 @@ class GameScreen : public Screen, public std::enable_shared_from_this<GameScreen
 		void customizeButton();
 		void initScore();
 		void displayScore(int s1, int s2);
-
 		void handleInput() override;
 		void checkOutOfScreen(std::shared_ptr<Movable> & obj);
+		inline void pause() { this->paused = true; }
+		inline void unpause() { this->paused = false; }
+		void pause_menu();
+		void display_pause();
 		std::string tittle_;
 		std::shared_ptr<Ball> ball_;
 		std::shared_ptr<Paddle> player1_;
@@ -51,4 +57,6 @@ class GameScreen : public Screen, public std::enable_shared_from_this<GameScreen
 		sf::Font score_font_;
 		unsigned player1_score_;
 		unsigned player2_score_;
+		sf::Text pause_text_;
+		sf::Font pause_font_;
 };
