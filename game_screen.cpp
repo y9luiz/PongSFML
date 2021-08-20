@@ -5,16 +5,10 @@ using namespace std::chrono_literals;
 
 GameScreen::GameScreen(const int width, const int height, const std::string tittle) : Screen(width,height,tittle), tittle_(tittle)
 {
-	auto ptr = dynamic_cast<Screen*>(this);
+	auto screen_ptr = dynamic_cast<Screen*>(this);
 
-	customizePlayer1();
-	customizePlayer2();
-	customizeBall();
-	scene_ = std::make_shared<Scene>(ptr);
-
-	scene_->addObject(player1_);
-	scene_->addObject(player2_);
-	scene_->addObject(ball_);
+	scene_ = std::make_shared<Scene>(screen_ptr);
+	createMenuScene();
 }
 void GameScreen::customizePlayer1()
 {
@@ -36,11 +30,10 @@ void GameScreen::customizeBall()
 	ball_->setFillColor(BALL_COLOR);
 	ball_->setSpeed(BALL_SPEED);
 }
-std::shared_ptr<Button> customizeButton()
+void GameScreen::customizeButton()
 {
-	sf::Texture texture;
-	auto button = std::make_shared<Button>(75,150,150,40,texture);
-	return button;
+	texture_.loadFromFile(ASSERTS_PATH+"/play_button.png");
+	button_ = std::make_shared<Button>( (WINDOW_WIDTH - 150 )/2, WINDOW_HEIGHT/2-40, 150, 40, texture_);
 }
 void GameScreen::handleInput()
 {
@@ -52,22 +45,39 @@ void GameScreen::handleInput()
 		}
 		if (event.KeyPressed)
 		{
-			if (event.key.code == sf::Keyboard::Up)
+			if( scene_type_ == Scene::Type::PLAY)
 			{
-				player1_->moveUp();
+				if (event.key.code == sf::Keyboard::Up)
+				{
+					player1_->moveUp();
+				}
+				else if (event.key.code == sf::Keyboard::Down)
+				{
+					player1_->moveDown();
+				}
+				if(event.key.code == sf::Keyboard::W)
+				{
+					player2_->moveUp();
+				}
+				else if(event.key.code == sf::Keyboard::S)
+				{
+					player2_->moveDown();
+				}
 			}
-			else if (event.key.code == sf::Keyboard::Down)
+			else
 			{
-				player1_->moveDown();
+				if (event.mouseButton.button == sf::Mouse::Left)
+				{
+					auto ptr = getPtr(); // reference to this
+					auto position = sf::Mouse::getPosition(*ptr);
+
+					if (button_->isInside(position.x,position.y))
+					{
+						scene_type_ = Scene::Type::PLAY;
+						createPlayScene();
+					}
+				}
 			}
-            if(event.key.code == sf::Keyboard::W)
-            {
-                player2_->moveUp();
-            }
-            else if(event.key.code == sf::Keyboard::S)
-            {
-                player2_->moveDown();
-            }
 		}
 	}
 };
@@ -80,28 +90,57 @@ void GameScreen::checkOutOfScreen(std::shared_ptr<Movable> & obj)
 		obj->restartPosistion();
 	}
 }
-void createMenuScene(GameScreen & game_screen)
+void GameScreen::createMenuScene()
 {
-	game_screen.scene_->addObject( std::dynamic_pointer_cast<sf::Shape>(customizeButton()));
+	scene_->clear();
+	customizeButton();
+	auto ptr = std::dynamic_pointer_cast<sf::Shape>(button_);
+	scene_->addObject(button_);
+}
+void GameScreen::createPlayScene()
+{
+	scene_->clear();
+
+	customizePlayer1();
+	scene_->addObject(player1_);
+	game_objects_.push_back(player1_);
+
+	customizePlayer2();
+	scene_->addObject(player2_);
+	game_objects_.push_back(player2_);
+
+
+	customizeBall();
+	scene_->addObject(ball_);
+	game_objects_.push_back(ball_);
+
+
 }
 
 void GameScreen::run()
 {
-	auto objects = scene_->getObjects();
+	bool initialized_menu = true;
 	while (isOpen())
 	{
+		if(scene_type_ == Scene::Type::PLAY)
+		{
+			autoMove(*ball_);
+			ball_->checkCollision(game_objects_);
+			auto obj = std::dynamic_pointer_cast<Movable>(ball_);
+			checkOutOfScreen(obj);
+		}
+		else{
+			if(!initialized_menu)
+			{
+				createMenuScene();
+				initialized_menu = true;
+			}
+		}
 		
 		handleInput();
-		clear(sf::Color::Black);
-		autoMove(*ball_);
-		
-		ball_->checkCollision(objects);
-		auto obj = std::dynamic_pointer_cast<Movable>(ball_);
-		checkOutOfScreen(obj);
-		// draw everything...
 		scene_->drawObjects();
-		
 		display();
+
 		std::this_thread::sleep_for(33ms);
 	}
 }

@@ -27,11 +27,12 @@ class GameScreen : public Screen, public std::enable_shared_from_this<GameScreen
 		}
 	private:
 		GameScreen(const int width, const int height, const std::string tittle);
-		friend void createMenuScene(GameScreen & game_screen);
+		void createMenuScene();
+		void createPlayScene();
 		void customizePlayer1();
 		void customizePlayer2();
 		void customizeBall();
-		std::shared_ptr<Button> customizeButton();
+		void customizeButton();
 		void handleInput() override;
 		void checkOutOfScreen(std::shared_ptr<Movable> & obj);
 		std::string tittle_;
@@ -40,5 +41,8 @@ class GameScreen : public Screen, public std::enable_shared_from_this<GameScreen
 		std::shared_ptr<Paddle> player2_;
 		std::shared_ptr<Scene> scene_;
 		std::shared_ptr<Button> button_;
+		sf::Texture texture_;
 		Scene::Type scene_type_;
+		std::vector<std::shared_ptr<sf::Shape>> game_objects_;
+
 };

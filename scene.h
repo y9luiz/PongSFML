@@ -23,15 +23,19 @@ class Scene
                     screen_->draw(*obj);
                 }
             }
-            void addObject(std::shared_ptr<sf::Shape> obj)
+            void addObject(std::shared_ptr<sf::Drawable> obj)
             {
                 objects_.push_back(obj);
             }
-            std::vector<std::shared_ptr<sf::Shape>>   getObjects()
+            std::vector<std::shared_ptr<sf::Drawable>>   getObjects()
             {
                 return objects_;
             }
+            void clear()
+            {
+                objects_.clear();
+            }
     private:
         Screen * screen_;
-        std::vector<std::shared_ptr<sf::Shape>> objects_;
+        std::vector<std::shared_ptr<sf::Drawable>> objects_;
 };
