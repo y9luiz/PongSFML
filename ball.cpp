@@ -29,12 +29,15 @@ bool Ball::checkCollision(std::vector<std::shared_ptr<sf::Shape>> & shapes)
 {
 	auto tgt_bound = this->getGlobalBounds();
 	
-	
 	for (const auto& shape : shapes)
 	{
 		if (shape.get() != (this))
 		{
 			auto src_bound = shape->getGlobalBounds();
+			if (direction_x_y_.first == DirectionX::RIGHT)
+				src_bound.left -= speed_.x;
+			else if (direction_x_y_.first == DirectionX::LEFT)
+				src_bound.left += speed_.x;
 			if (tgt_bound.intersects(src_bound))
 			{
 				collided_ = true;
@@ -79,12 +82,16 @@ void autoMove(Ball & ball)
 	if (!ball.collided_)
 	{
 		ball.prev_position_ = ball.position_;
+
+
 	}
 	else 
 	{ 
 		change_direction_x();
 		change_direction_y();
 		ball.collided_ = false;
+		ball.setPosition(ball.prev_position_);
+
 	}
 	ball.moveByDirection();
 }
