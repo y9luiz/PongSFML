@@ -7,13 +7,13 @@ using namespace std::chrono_literals;
 
 GameScreen::GameScreen(const int width, const int height, const std::string tittle) : Screen(width,height,tittle), tittle_(tittle)
 {
-    customizePlayer1();
-	customizePlayer2();
-	customizeBall();
+	
+	auto screen_ptr = dynamic_cast<Screen*>(this);
+
+	scene_ = std::make_shared<Scene>(screen_ptr);
+	createMenuScene();
 	initScore();
-	collider_.add(player1_);
-	collider_.add(player2_);
-	collider_.add(ball_);
+
 
 }
 void GameScreen::customizePlayer1()
@@ -36,16 +36,15 @@ void GameScreen::customizeBall()
 	ball_->setFillColor(BALL_COLOR);
 	ball_->setSpeed(BALL_SPEED);
 }
-
 void GameScreen::initScore()
-{	
+{
 	player1_score_ = 0;
 	player2_score_ = 0;
 
-    if(!score_font_.loadFromFile(FONT_SCORE_PATH))
-    {
-        std::cout << "Erro ao tentar carregar a fonte. Path:" << FONT_SCORE_PATH << "\n";
-    }
+	if (!score_font_.loadFromFile(FONT_SCORE_PATH))
+	{
+		std::cout << "Erro ao tentar carregar a fonte. Path:" << FONT_SCORE_PATH << "\n";
+	}
 	score_board_.setFont(score_font_);
 	score_board_.setCharacterSize(FONT_SCORE_SIZE);
 	score_board_.setFillColor(FONT_SCORE_COLOR);
@@ -59,7 +58,6 @@ void GameScreen::displayScore(int s1, int s2) {
 	score_board_.setOrigin(scoreBounds.left + scoreBounds.width / 2, scoreBounds.top + scoreBounds.height / 2);
 	score_board_.setPosition(WINDOW_WIDTH / 2, 30);
 }
-
 void GameScreen::handleInput()
 {
 	while (pollEvent(event))
@@ -70,22 +68,38 @@ void GameScreen::handleInput()
 		}
 		if (event.KeyPressed)
 		{
-			if (event.key.code == sf::Keyboard::W && player1_->getPosition_().y - player1_->getSpeed().y >= 0)
+			if( scene_type_ == Scene::Type::PLAY)
 			{
-				player1_->moveUp();
+				if (event.key.code == sf::Keyboard::Up)
+				{
+					player1_->moveUp();
+				}
+				else if (event.key.code == sf::Keyboard::Down)
+				{
+					player1_->moveDown();
+				}
+				if(event.key.code == sf::Keyboard::W)
+				{
+					player2_->moveUp();
+				}
+				else if(event.key.code == sf::Keyboard::S)
+				{
+					player2_->moveDown();
+				}
 			}
-			else if (event.key.code == sf::Keyboard::S && player1_->getPosition_().y + player1_->getSpeed().y + PADDLE_SIZE.y <= WINDOW_HEIGHT)
+			else
 			{
-				player1_->moveDown();
-			}
+				if (event.mouseButton.button == sf::Mouse::Left)
+				{
+					auto ptr = getPtr(); // reference to this
+					auto position = sf::Mouse::getPosition(*ptr);
 
-			if (event.key.code == sf::Keyboard::Up && player2_->getPosition_().y - player2_->getSpeed().y >= 0)
-			{
-				player2_->moveUp();
-			}
-			else if (event.key.code == sf::Keyboard::Down && player2_->getPosition_().y + player2_->getSpeed().y + PADDLE_SIZE.y <= WINDOW_HEIGHT)
-			{
-				player2_->moveDown();
+					if (button_->isInside(position.x,position.y))
+					{
+						scene_type_ = Scene::Type::PLAY;
+						createPlayScene();
+					}
+				}
 			}
 		}
 	}
@@ -116,27 +130,58 @@ void GameScreen::checkOutOfScreen(std::shared_ptr<Movable> & obj)
 		obj->changeDirectionToUp();
 	}
 }
+void GameScreen::createMenuScene()
+{
+	scene_->clear();
+	customizeButton();
+	auto ptr = std::dynamic_pointer_cast<sf::Shape>(button_);
+	scene_->addObject(button_);
+}
+void GameScreen::createPlayScene()
+{
+	scene_->clear();
+
+	customizePlayer1();
+	scene_->addObject(player1_);
+	game_objects_.push_back(player1_);
+
+	customizePlayer2();
+	scene_->addObject(player2_);
+	game_objects_.push_back(player2_);
+
+
+	customizeBall();
+	scene_->addObject(ball_);
+	game_objects_.push_back(ball_);
+
+
+}
 
 void GameScreen::run()
 {
-	auto objects = collider_.get();
+	bool initialized_menu = true;
 	while (isOpen())
 	{
-		handleInput();
-		clear(sf::Color::Black);
-		autoMove(*ball_);
-		
-		ball_->checkCollision(objects);
-		auto obj = std::dynamic_pointer_cast<Movable>(ball_);
-		checkOutOfScreen(obj);
-		// draw everything...
-		for (auto& object : objects)
+		if(scene_type_ == Scene::Type::PLAY)
 		{
-			draw(*object);
+			autoMove(*ball_);
+			ball_->checkCollision(game_objects_);
+			auto obj = std::dynamic_pointer_cast<Movable>(ball_);
+			checkOutOfScreen(obj);
+		}
+		else{
+			if(!initialized_menu)
+			{
+				createMenuScene();
+				initialized_menu = true;
+			}
 		}
 		
-	    draw(score_board_);	
+		handleInput();
+		scene_->drawObjects();
+		draw(score_board_);
 		display();
+
 		std::this_thread::sleep_for(33ms);
 	}
 }
