@@ -67,12 +67,12 @@ void GameScreen::initScore()
 }
 
 void GameScreen::displayScore(unsigned s1, unsigned s2, unsigned w1, unsigned w2) {
-	score_board_.setString(std::to_string(s1) + " : " + std::to_string(s2));
+	score_board_->setString(std::to_string(s1) + " : " + std::to_string(s2));
 	win1_board_.setString(std::to_string(w1));
 	win2_board_.setString(std::to_string(w2));
-	sf::FloatRect scoreBounds = score_board_.getLocalBounds(); //pega as delimitacoes do retangulo do texto
-	score_board_.setOrigin(scoreBounds.left + scoreBounds.width / 2, scoreBounds.top + scoreBounds.height / 2);
-	score_board_.setPosition(WINDOW_WIDTH / 2, 30);
+	sf::FloatRect scoreBounds = score_board_->getLocalBounds(); //pega as delimitacoes do retangulo do texto
+	score_board_->setOrigin(scoreBounds.left + scoreBounds.width / 2, scoreBounds.top + scoreBounds.height / 2);
+	score_board_->setPosition(WINDOW_WIDTH / 2, 30);
 	win1_board_.setPosition(20, 30);
 	win2_board_.setPosition(60, 30);
 }
@@ -146,13 +146,12 @@ void GameScreen::handleInput()
 					{
 						scene_type_ = Scene::Type::PLAY;
 						createPlayScene();
-						createObstacle();
 					}
 				}
 			}
 		}
 	}
-};
+}
 void GameScreen::checkOutOfScreen(std::shared_ptr<Movable> & obj)
 {
 	sf::Vector2 pos = obj->getPosition_();
@@ -161,7 +160,7 @@ void GameScreen::checkOutOfScreen(std::shared_ptr<Movable> & obj)
 	{
 		obj->restartPosistion();
 		player2_score_++;
-		displayScore(player1_score_, player2_score_, player2_score_, player1_win_, player2_win_);
+		displayScore(player1_score_, player2_score_, player1_win_, player2_win_);
 	}
 	else if (pos.x>WINDOW_WIDTH)
 	{
@@ -197,7 +196,8 @@ void GameScreen::changeLevel() {
 		level_ = 0;
 	}
 
-	ball_->setSpeed(ball_->getSpeed() + SPEED_INC);
+	sf::Vector2f speed = sf::Vector2f(ball_->getSpeed().x + SPEED_INCX, ball_->getSpeed().y + SPEED_INCY);
+	ball_->setSpeed(speed);
 
 	switch (level_)
 	{
@@ -268,14 +268,14 @@ void GameScreen::createPauseScene()
 	scene_->addObject(pause_text_);
 }
 
-void createLevel1Scene() {
+void GameScreen::createLevel1Scene() {
 	createPlayScene();
 	createObstacle(std::make_shared<Paddle>(LEVEL1_OBST_RECT));
 }
-void createLevel2Scene(){
+void GameScreen::createLevel2Scene(){
 	createPlayScene();
 }
-void createLevel3Scene(){
+void GameScreen::createLevel3Scene(){
 	createPlayScene();
 	createObstacle(std::make_shared<Paddle>(LEVEL3_OBST1_RECT));
 	createObstacle(std::make_shared<Paddle>(LEVEL3_OBST2_RECT));
@@ -314,7 +314,7 @@ void GameScreen::run()
 		handleInput();
 		scene_->drawObjects();
 		display();
-    checkEndLevel();
+   		checkEndLevel();
     
 		std::this_thread::sleep_for(33ms);
 	}

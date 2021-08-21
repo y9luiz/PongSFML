@@ -40,7 +40,8 @@ const sf::Color BALL_COLOR(0, 255, 0);
 //const sf::Vector2f BALL_INIT_POSITION = sf::Vector2f(PLAYER_1_X_POS, PLAYER_1_Y_POS);
 
 //SPEED INCREASEMENT PER LEVEL
-const int SPEED_INC = 5;
+const int SPEED_INCX = 3;
+const int SPEED_INCY = 1;
 
 // OBSTACLES DEFINITIONS
 const sf::Color OBSTACLE_COLOR = sf::Color(69, 129, 142);

@@ -42,8 +42,9 @@ class GameScreen : public Screen, public std::enable_shared_from_this<GameScreen
 		void customizeButton();
 		void initScore();
 		void displayScore(unsigned s1, unsigned s2, unsigned w1, unsigned w2);
-		void createObstacle();
+		void createObstacle(std::shared_ptr<Paddle> ob);
 		void checkEndLevel();
+		void changeLevel();
 		void handleInput() override;
 		void checkOutOfScreen(std::shared_ptr<Movable> & obj);
 		inline void pause() { this->paused = true; }
