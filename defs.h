@@ -13,7 +13,7 @@ const sf::Color FONT_SCORE_COLOR = sf::Color(255, 255, 255);
 const int FONT_SCORE_SIZE = 30;
 const std::string FONT_PAUSE_PATH = "Assets/CollegiateOutlineFLF.ttf";
 const sf::Color FONT_PAUSE_COLOR = sf::Color(255, 255, 255);
-const int FONT_PAUSE_SIZE = 100;
+const int FONT_PAUSE_SIZE = 50;
 
 // PLAYERS DEFINITIONS
 const sf::Vector2f PADDLE_SPEED(1, 10);

@@ -8,7 +8,8 @@ class Scene
     public:
             enum class Type{
                 MENU,
-                PLAY
+                PLAY,
+                PAUSE
             };
             Scene(Screen * parent_screen): screen_(parent_screen)
             {

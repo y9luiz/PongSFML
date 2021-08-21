@@ -32,6 +32,7 @@ class GameScreen : public Screen, public std::enable_shared_from_this<GameScreen
 		GameScreen(const int width, const int height, const std::string tittle);
 		void createMenuScene();
 		void createPlayScene();
+		void createPauseScene();
 		void customizePlayer1();
 		void customizePlayer2();
 		void customizeBall();
@@ -42,8 +43,6 @@ class GameScreen : public Screen, public std::enable_shared_from_this<GameScreen
 		void checkOutOfScreen(std::shared_ptr<Movable> & obj);
 		inline void pause() { this->paused = true; }
 		inline void unpause() { this->paused = false; }
-		void pause_menu();
-		void display_pause();
 		std::string tittle_;
 		std::shared_ptr<Ball> ball_;
 		std::shared_ptr<Paddle> player1_;
