@@ -50,18 +50,19 @@ void GameScreen::initScore()
 	{
 		std::cout << "Erro ao tentar carregar a fonte. Path:" << FONT_SCORE_PATH << "\n";
 	}
-	score_board_.setFont(score_font_);
-	score_board_.setCharacterSize(FONT_SCORE_SIZE);
-	score_board_.setFillColor(FONT_SCORE_COLOR);
+	score_board_ = std::make_shared<sf::Text>();
+	score_board_->setFont(score_font_);
+	score_board_->setCharacterSize(FONT_SCORE_SIZE);
+	score_board_->setFillColor(FONT_SCORE_COLOR);
+
 	displayScore(0, 0);
 }
 
 void GameScreen::displayScore(int s1, int s2) {
-	score_board_.setString(std::to_string(s1) + " : " + std::to_string(s2));
-
-	sf::FloatRect scoreBounds = score_board_.getLocalBounds(); //pega as delimitacoes do retangulo do texto
-	score_board_.setOrigin(scoreBounds.left + scoreBounds.width / 2, scoreBounds.top + scoreBounds.height / 2);
-	score_board_.setPosition(WINDOW_WIDTH / 2, 30);
+	score_board_->setString(std::to_string(s1) + " : " + std::to_string(s2));
+	sf::FloatRect scoreBounds = score_board_->getLocalBounds(); //pega as delimitacoes do retangulo do texto
+	score_board_->setOrigin(scoreBounds.left + scoreBounds.width / 2, scoreBounds.top + scoreBounds.height / 2);
+	score_board_->setPosition(WINDOW_WIDTH / 2, 30);
 }
 
 void GameScreen::handleInput()
@@ -79,9 +80,9 @@ void GameScreen::handleInput()
 				//PAUSE GAME
 				if (event.key.code == sf::Keyboard::Escape && this->paused == false)
 				{
+					pause();
 					setSceneType(Scene::Type::PAUSE);
 					createPauseScene();
-					pause();
 				}
 				if (event.key.code == sf::Keyboard::W && player1_->getPosition_().y - player1_->getSpeed().y >= 0)
 				{
@@ -112,8 +113,8 @@ void GameScreen::handleInput()
 				if (event.key.code == sf::Keyboard::F2 && this->paused == true)
 				{
 					setSceneType(Scene::Type::MENU);
-					createMenuScene();
 					unpause();
+					createMenuScene();
 				}
 				//QUIT GAME
 				if (event.key.code == sf::Keyboard::F3 && this->paused == true)
@@ -176,7 +177,6 @@ void GameScreen::createPlayScene()
 {
 	scene_->clear();
 	game_objects_.clear();
-	initScore();
 
 	customizePlayer1();
 	scene_->addObject(player1_);
@@ -189,6 +189,9 @@ void GameScreen::createPlayScene()
 	customizeBall();
 	scene_->addObject(ball_);
 	game_objects_.push_back(ball_);
+
+	initScore();
+	scene_->addObject(score_board_);
 }
 
 void GameScreen::createPauseScene()
@@ -237,7 +240,6 @@ void GameScreen::run()
 		
 		handleInput();
 		scene_->drawObjects();
-		draw(score_board_);
 		display();
 
 		if (this->paused == true) {
