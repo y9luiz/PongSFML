@@ -103,6 +103,7 @@ void GameScreen::handleInput()
 					{
 						scene_type_ = Scene::Type::PLAY;
 						createPlayScene();
+						createObstacle();
 					}
 				}
 			}
@@ -160,6 +161,17 @@ void GameScreen::createPlayScene()
 	game_objects_.push_back(ball_);
 
 
+}
+
+void GameScreen::createObstacle() {
+	obstacle1_ = std::make_shared<Paddle>(LEVEL4_OBST1_RECT);
+	obstacle2_ = std::make_shared<Paddle>(LEVEL4_OBST2_RECT);
+	obstacle1_->setFillColor(OBSTACLE_COLOR);
+	obstacle2_->setFillColor(OBSTACLE_COLOR);
+	scene_->addObject(obstacle1_);
+	scene_->addObject(obstacle2_);
+	game_objects_.push_back(obstacle1_);
+	game_objects_.push_back(obstacle2_);
 }
 
 void GameScreen::run()

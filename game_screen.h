@@ -35,13 +35,15 @@ class GameScreen : public Screen, public std::enable_shared_from_this<GameScreen
 		void customizeButton();
 		void initScore();
 		void displayScore(int s1, int s2);
-
+		void createObstacle();
 		void handleInput() override;
 		void checkOutOfScreen(std::shared_ptr<Movable> & obj);
 		std::string tittle_;
 		std::shared_ptr<Ball> ball_;
 		std::shared_ptr<Paddle> player1_;
 		std::shared_ptr<Paddle> player2_;
+		std::shared_ptr<Paddle> obstacle1_;
+		std::shared_ptr<Paddle> obstacle2_;
 		std::shared_ptr<Scene> scene_;
 		std::shared_ptr<Button> button_;
 		sf::Texture texture_;
@@ -51,4 +53,5 @@ class GameScreen : public Screen, public std::enable_shared_from_this<GameScreen
 		sf::Font score_font_;
 		unsigned player1_score_;
 		unsigned player2_score_;
+		unsigned level_;
 };
