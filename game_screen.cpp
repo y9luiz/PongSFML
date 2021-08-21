@@ -7,13 +7,9 @@ using namespace std::chrono_literals;
 
 GameScreen::GameScreen(const int width, const int height, const std::string tittle) : Screen(width,height,tittle), tittle_(tittle)
 {
-	
 	auto screen_ptr = dynamic_cast<Screen*>(this);
-
 	scene_ = std::make_shared<Scene>(screen_ptr);
 	createMenuScene();
-	initScore();
-
 	this->paused = false;
 }
 void GameScreen::customizePlayer1()
@@ -28,19 +24,21 @@ void GameScreen::customizePlayer2()
 	player2_ = std::make_shared<Paddle>(PLAYER_2_RECT);
 	player2_->setFillColor(PLAYER_2_COLOR);
 	player2_->setSpeed(PADDLE_SPEED);
-
 }
+
 void GameScreen::customizeBall()
 {
 	ball_ = std::make_shared<Ball>(BALL_INIT_POSITION, BALL_RADIUS);
 	ball_->setFillColor(BALL_COLOR);
 	ball_->setSpeed(BALL_SPEED);
 }
+
 void GameScreen::customizeButton()
 {
 	texture_.loadFromFile(ASSERTS_PATH + "/play_button.png");
 	button_ = std::make_shared<Button>((WINDOW_WIDTH - 150) / 2, WINDOW_HEIGHT / 2 - 40, 150, 40, texture_);
 }
+
 void GameScreen::initScore()
 {
 	player1_score_ = 0;
@@ -107,6 +105,7 @@ void GameScreen::handleInput()
 				if (event.key.code == sf::Keyboard::F1 && this->paused == true)
 				{
 					setSceneType(Scene::Type::PLAY);
+					scene_->removeObject(pause_text_);					
 					unpause();
 				}
 				//MAIN MENU
@@ -201,16 +200,19 @@ void GameScreen::createPauseScene()
 	{
 		std::cout << "Erro ao tentar carregar a fonte. Path:" << FONT_PAUSE_PATH << "\n";
 	}
-	pause_text_.setFont(pause_font_);
-	pause_text_.setCharacterSize(FONT_PAUSE_SIZE);
-	pause_text_.setFillColor(FONT_PAUSE_COLOR);
+	pause_text_ = std::make_shared<sf::Text>();
+	pause_text_->setFont(pause_font_);
+	pause_text_->setCharacterSize(FONT_PAUSE_SIZE);
+	pause_text_->setFillColor(FONT_PAUSE_COLOR);
 
 	//DISPLAY PAUSE
-	pause_text_.setString("    PAUSED\n\nresume game\nmain menu\nquit");
+	pause_text_->setString("    PAUSED\n\nresume game\nmain menu\nquit");
 
-	sf::FloatRect pause_bounds = pause_text_.getLocalBounds(); //pega as delimitacoes do retangulo do texto
-	pause_text_.setOrigin(pause_bounds.left + pause_bounds.width / 2, pause_bounds.top + pause_bounds.height / 2);
-	pause_text_.setPosition(WINDOW_WIDTH / 2, WINDOW_HEIGHT / 2);
+	sf::FloatRect pause_bounds = pause_text_->getLocalBounds(); //pega as delimitacoes do retangulo do texto
+	pause_text_->setOrigin(pause_bounds.left + pause_bounds.width / 2, pause_bounds.top + pause_bounds.height / 2);
+	pause_text_->setPosition(WINDOW_WIDTH / 2, WINDOW_HEIGHT / 2);
+
+	scene_->addObject(pause_text_);
 }
 
 void GameScreen::run()
@@ -224,7 +226,6 @@ void GameScreen::run()
 			ball_->checkCollision(game_objects_);
 			auto obj = std::dynamic_pointer_cast<Movable>(ball_);
 			checkOutOfScreen(obj);
-
 		}
 		else if (scene_type_ == Scene::Type::PAUSE)
 		{
@@ -241,11 +242,6 @@ void GameScreen::run()
 		handleInput();
 		scene_->drawObjects();
 		display();
-
-		if (this->paused == true) {
-			draw(pause_text_);
-			display();
-		}
 		
 		std::this_thread::sleep_for(33ms);
 	}

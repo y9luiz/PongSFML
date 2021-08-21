@@ -56,6 +56,6 @@ class GameScreen : public Screen, public std::enable_shared_from_this<GameScreen
 		sf::Font score_font_;
 		unsigned player1_score_;
 		unsigned player2_score_;
-		sf::Text pause_text_;
+		std::shared_ptr<sf::Text> pause_text_;
 		sf::Font pause_font_;
 };

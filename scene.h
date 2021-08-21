@@ -32,6 +32,10 @@ class Scene
             {
                 return objects_;
             }
+            void removeObject(std::shared_ptr<sf::Drawable> obj)
+            {
+                objects_.pop_back();
+            }
             void clear()
             {
                 objects_.clear();
