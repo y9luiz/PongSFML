@@ -40,22 +40,24 @@ const sf::Color BALL_COLOR(0, 255, 0);
 //const sf::Vector2f BALL_INIT_POSITION = sf::Vector2f(PLAYER_1_X_POS, PLAYER_1_Y_POS);
 
 //SPEED INCREASEMENT PER LEVEL
-const int SPEED_INC = 5;
+const int SPEED_INCX = 0.5;
+const int SPEED_INCY = 0.02;
+const int SPEED_INCP = 0.2;
 
 // OBSTACLES DEFINITIONS
 const sf::Color OBSTACLE_COLOR = sf::Color(69, 129, 142);
-const sf::Vector2f OBSTACLE_SIZE(15, 120);
+const sf::Vector2f OBSTACLE_SIZE(15, 140);
 const sf::Rect<float> LEVEL1_OBST_RECT(
     WINDOW_WIDTH/2 - OBSTACLE_SIZE.x/2, WINDOW_HEIGHT/2 - OBSTACLE_SIZE.y/2,
     OBSTACLE_SIZE.x, OBSTACLE_SIZE.y
     );
 const sf::Rect<float> LEVEL2_OBST1_RECT(
-    0, 0,
-    10, 10
+    200, WINDOW_HEIGHT/2 - OBSTACLE_SIZE.y/2,
+    OBSTACLE_SIZE.x, OBSTACLE_SIZE.y - 30
     );
 const sf::Rect<float> LEVEL2_OBST2_RECT(
-    0, 0,
-    10, 10
+    WINDOW_WIDTH - 200, WINDOW_HEIGHT/2 - OBSTACLE_SIZE.y/2,
+    OBSTACLE_SIZE.x, OBSTACLE_SIZE.y - 30
     );
 const sf::Rect<float> LEVEL3_OBST1_RECT(
     150, 50,

@@ -11,6 +11,14 @@ GameScreen::GameScreen(const int width, const int height, const std::string titt
 	scene_ = std::make_shared<Scene>(screen_ptr);
 	createMenuScene();
 	this->paused = false;
+	customizeBall();
+	customizePlayer1();
+	customizePlayer2();
+	player1_score_ = 0;
+	player2_score_ = 0;
+	player1_win_ = 0;
+	player2_win_ = 0;
+	level_ = 0;
 }
 void GameScreen::customizePlayer1()
 {
@@ -36,17 +44,11 @@ void GameScreen::customizeBall()
 void GameScreen::customizeButton()
 {
 	texture_.loadFromFile(ASSERTS_PATH + "/play_button.png");
-	button_ = std::make_shared<Button>((WINDOW_WIDTH - 150) / 2, WINDOW_HEIGHT / 2 - 40, 150, 40, texture_);
+	button_ = std::make_shared<Button>((WINDOW_WIDTH - 100) / 2, WINDOW_HEIGHT / 2 - 40, 100, 40, texture_);
 }
 
 void GameScreen::initScore()
 {
-	player1_score_ = 0;
-	player2_score_ = 0;
-	player1_win_ = 0;
-	player2_win_ = 0;
-	level_ = 0;
-
 	if (!score_font_.loadFromFile(FONT_SCORE_PATH))
 	{
 		std::cout << "Erro ao tentar carregar a fonte. Path:" << FONT_SCORE_PATH << "\n";
@@ -56,25 +58,34 @@ void GameScreen::initScore()
 	score_board_->setFont(score_font_);
 	score_board_->setCharacterSize(FONT_SCORE_SIZE);
 	score_board_->setFillColor(FONT_SCORE_COLOR);
-  
-  win1_board_.setFont(score_font_);
-	win1_board_.setCharacterSize(FONT_SCORE_SIZE - 4);
-	win1_board_.setFillColor(FONT_SCORE_COLOR);
-	win2_board_.setFont(score_font_);
-	win2_board_.setCharacterSize(FONT_SCORE_SIZE - 4);
-	win2_board_.setFillColor(FONT_SCORE_COLOR);
-	displayScore(0, 0, 0, 0);
+
+	win1_board_ = std::make_shared<sf::Text>();
+	win1_board_->setFont(score_font_);
+	win1_board_->setCharacterSize(FONT_SCORE_SIZE - 5);
+	win1_board_->setFillColor(FONT_SCORE_COLOR);
+
+	win2_board_ = std::make_shared<sf::Text>();
+	win2_board_->setFont(score_font_);
+	win2_board_->setCharacterSize(FONT_SCORE_SIZE - 5);
+	win2_board_->setFillColor(FONT_SCORE_COLOR);
+
+	displayScore(player1_score_, player1_score_, player1_win_, player2_win_);
 }
 
 void GameScreen::displayScore(unsigned s1, unsigned s2, unsigned w1, unsigned w2) {
-	score_board_.setString(std::to_string(s1) + " : " + std::to_string(s2));
-	win1_board_.setString(std::to_string(w1));
-	win2_board_.setString(std::to_string(w2));
-	sf::FloatRect scoreBounds = score_board_.getLocalBounds(); //pega as delimitacoes do retangulo do texto
-	score_board_.setOrigin(scoreBounds.left + scoreBounds.width / 2, scoreBounds.top + scoreBounds.height / 2);
-	score_board_.setPosition(WINDOW_WIDTH / 2, 30);
-	win1_board_.setPosition(20, 30);
-	win2_board_.setPosition(60, 30);
+	score_board_->setString(std::to_string(s1) + " : " + std::to_string(s2));
+	win1_board_->setString(std::to_string(w1));
+	win2_board_->setString(std::to_string(w2));
+
+	sf::FloatRect scoreBounds = score_board_->getLocalBounds(); //pega as delimitacoes do retangulo do texto
+	sf::FloatRect win1Bounds = win1_board_->getLocalBounds();
+	sf::FloatRect win2Bounds = score_board_->getLocalBounds();
+
+	score_board_->setOrigin(scoreBounds.left + scoreBounds.width / 2, scoreBounds.top + scoreBounds.height / 2);
+	score_board_->setPosition(WINDOW_WIDTH / 2, 30);
+
+	win1_board_->setPosition(WINDOW_WIDTH/2 - scoreBounds.width/2 - win1Bounds.width - 20, 15);
+	win2_board_->setPosition(WINDOW_WIDTH/2 + scoreBounds.width/2 + 20, 15);
 }
 
 void GameScreen::handleInput()
@@ -128,6 +139,11 @@ void GameScreen::handleInput()
 					setSceneType(Scene::Type::MENU);
 					unpause();
 					createMenuScene();
+					player1_score_ = 0;
+					player2_score_ = 0;
+					player1_win_ = 0;
+					player2_win_ = 0;
+					level_ = 0;
 				}
 				//QUIT GAME
 				if (event.key.code == sf::Keyboard::F3 && this->paused == true)
@@ -146,13 +162,12 @@ void GameScreen::handleInput()
 					{
 						scene_type_ = Scene::Type::PLAY;
 						createPlayScene();
-						createObstacle();
 					}
 				}
 			}
 		}
 	}
-};
+}
 void GameScreen::checkOutOfScreen(std::shared_ptr<Movable> & obj)
 {
 	sf::Vector2 pos = obj->getPosition_();
@@ -161,7 +176,7 @@ void GameScreen::checkOutOfScreen(std::shared_ptr<Movable> & obj)
 	{
 		obj->restartPosistion();
 		player2_score_++;
-		displayScore(player1_score_, player2_score_, player2_score_, player1_win_, player2_win_);
+		displayScore(player1_score_, player2_score_, player1_win_, player2_win_);
 	}
 	else if (pos.x>WINDOW_WIDTH)
 	{
@@ -180,37 +195,45 @@ void GameScreen::checkOutOfScreen(std::shared_ptr<Movable> & obj)
 	}
 }
 void GameScreen::checkEndLevel() {
-	if(player1_score_ == 2) {
-		level_++;
+	if(player1_score_ == 3) {
 		player1_win_++;
 		changeLevel();
-	} else if(player2_score_ == 2) {
-		level_++;
+	} else if(player2_score_ == 3) {
 		player2_win_++;
 		changeLevel();
 	}
 }
 void GameScreen::changeLevel() {
-	displayScore(player1_score_, player2_score_, player1_win_, player2_win_);
+	level_++;
+	player1_score_ = 0;
+	player2_score_ = 0;
 
+	//sempre retornar pro level 0, porem velocidade continua aumentando
 	if (level_ > 3) {
 		level_ = 0;
 	}
 
-	ball_->setSpeed(ball_->getSpeed() + SPEED_INC);
+	//aumenta velocidade sempre que mudar de level
+	sf::Vector2f speed = sf::Vector2f(ball_->getSpeed().x + SPEED_INCX, ball_->getSpeed().y + SPEED_INCY);
+	ball_->setSpeed(speed);
+	speed = sf::Vector2f(player1_->getSpeed().x, player1_->getSpeed().y + SPEED_INCP);
+	player1_->setSpeed(speed);
+	player2_->setSpeed(speed);
 
 	switch (level_)
 	{
 	case 0:
 		createPlayScene();
+		break;
 	case 1:
 		createLevel1Scene();
+		break;
 	case 2:
-		/* code */
+		createLevel2Scene();
+		break;
 	case 3:
 		createLevel3Scene();
-		
-	
+		break;
 	default:
 		break;
 	}
@@ -230,20 +253,19 @@ void GameScreen::createPlayScene()
 	scene_->clear();
 	game_objects_.clear();
 
-	customizePlayer1();
 	scene_->addObject(player1_);
 	game_objects_.push_back(player1_);
 
-	customizePlayer2();
 	scene_->addObject(player2_);
 	game_objects_.push_back(player2_);
 
-	customizeBall();
 	scene_->addObject(ball_);
 	game_objects_.push_back(ball_);
 
-	initScore(); //see
+	initScore();
 	scene_->addObject(score_board_);
+	scene_->addObject(win1_board_);
+	scene_->addObject(win2_board_);
 }
 
 void GameScreen::createPauseScene()
@@ -268,23 +290,24 @@ void GameScreen::createPauseScene()
 	scene_->addObject(pause_text_);
 }
 
-void createLevel1Scene() {
+void GameScreen::createLevel1Scene() {
 	createPlayScene();
 	createObstacle(std::make_shared<Paddle>(LEVEL1_OBST_RECT));
 }
-void createLevel2Scene(){
+void GameScreen::createLevel2Scene() {
 	createPlayScene();
+	createObstacle(std::make_shared<Paddle>(LEVEL2_OBST1_RECT));
+	createObstacle(std::make_shared<Paddle>(LEVEL2_OBST2_RECT));
 }
-void createLevel3Scene(){
+void GameScreen::createLevel3Scene() {
 	createPlayScene();
 	createObstacle(std::make_shared<Paddle>(LEVEL3_OBST1_RECT));
 	createObstacle(std::make_shared<Paddle>(LEVEL3_OBST2_RECT));
-	
 }
-void GameScreen::createObstacle(std::shared_ptr<Paddle> ob) {
-	ob->setFillColor(OBSTACLE_COLOR);
-	scene_->addObject(ob);
-	game_objects_.push_back(ob);
+void GameScreen::createObstacle(std::shared_ptr<Paddle> obstacle) {
+	obstacle->setFillColor(OBSTACLE_COLOR);
+	scene_->addObject(obstacle);
+	game_objects_.push_back(obstacle);
 }
 
 void GameScreen::run()
@@ -314,7 +337,7 @@ void GameScreen::run()
 		handleInput();
 		scene_->drawObjects();
 		display();
-    checkEndLevel();
+   		checkEndLevel();
     
 		std::this_thread::sleep_for(33ms);
 	}
