@@ -8,11 +8,9 @@ using namespace std::chrono_literals;
 GameScreen::GameScreen(const int width, const int height, const std::string tittle) : Screen(width,height,tittle), tittle_(tittle)
 {
 	auto screen_ptr = dynamic_cast<Screen*>(this);
-
 	scene_ = std::make_shared<Scene>(screen_ptr);
 	createMenuScene();
-	initScore();
-
+	this->paused = false;
 }
 void GameScreen::customizePlayer1()
 {
@@ -26,19 +24,21 @@ void GameScreen::customizePlayer2()
 	player2_ = std::make_shared<Paddle>(PLAYER_2_RECT);
 	player2_->setFillColor(PLAYER_2_COLOR);
 	player2_->setSpeed(PADDLE_SPEED);
-
 }
+
 void GameScreen::customizeBall()
 {
 	ball_ = std::make_shared<Ball>(BALL_INIT_POSITION, BALL_RADIUS);
 	ball_->setFillColor(BALL_COLOR);
 	ball_->setSpeed(BALL_SPEED);
 }
+
 void GameScreen::customizeButton()
 {
 	texture_.loadFromFile(ASSERTS_PATH + "/play_button.png");
 	button_ = std::make_shared<Button>((WINDOW_WIDTH - 150) / 2, WINDOW_HEIGHT / 2 - 40, 150, 40, texture_);
 }
+
 void GameScreen::initScore()
 {
 	player1_score_ = 0;
@@ -51,10 +51,13 @@ void GameScreen::initScore()
 	{
 		std::cout << "Erro ao tentar carregar a fonte. Path:" << FONT_SCORE_PATH << "\n";
 	}
-	score_board_.setFont(score_font_);
-	score_board_.setCharacterSize(FONT_SCORE_SIZE);
-	score_board_.setFillColor(FONT_SCORE_COLOR);
-	win1_board_.setFont(score_font_);
+
+	score_board_ = std::make_shared<sf::Text>();
+	score_board_->setFont(score_font_);
+	score_board_->setCharacterSize(FONT_SCORE_SIZE);
+	score_board_->setFillColor(FONT_SCORE_COLOR);
+  
+  win1_board_.setFont(score_font_);
 	win1_board_.setCharacterSize(FONT_SCORE_SIZE - 4);
 	win1_board_.setFillColor(FONT_SCORE_COLOR);
 	win2_board_.setFont(score_font_);
@@ -63,7 +66,7 @@ void GameScreen::initScore()
 	displayScore(0, 0, 0, 0);
 }
 
-void displayScore(unsigned s1, unsigned s2, unsigned w1, unsigned w2) {
+void GameScreen::displayScore(unsigned s1, unsigned s2, unsigned w1, unsigned w2) {
 	score_board_.setString(std::to_string(s1) + " : " + std::to_string(s2));
 	win1_board_.setString(std::to_string(w1));
 	win2_board_.setString(std::to_string(w2));
@@ -73,6 +76,7 @@ void displayScore(unsigned s1, unsigned s2, unsigned w1, unsigned w2) {
 	win1_board_.setPosition(20, 30);
 	win2_board_.setPosition(60, 30);
 }
+
 void GameScreen::handleInput()
 {
 	while (pollEvent(event))
@@ -85,21 +89,50 @@ void GameScreen::handleInput()
 		{
 			if( scene_type_ == Scene::Type::PLAY)
 			{
-				if (event.key.code == sf::Keyboard::Up)
+				//PAUSE GAME
+				if (event.key.code == sf::Keyboard::Escape && this->paused == false)
+				{
+					pause();
+					setSceneType(Scene::Type::PAUSE);
+					createPauseScene();
+				}
+				if (event.key.code == sf::Keyboard::W && player1_->getPosition_().y - player1_->getSpeed().y >= 0)
 				{
 					player1_->moveUp();
 				}
-				else if (event.key.code == sf::Keyboard::Down)
+				else if (event.key.code == sf::Keyboard::S && player1_->getPosition_().y + player1_->getSpeed().y + PADDLE_SIZE.y <= WINDOW_HEIGHT)
 				{
 					player1_->moveDown();
 				}
-				if(event.key.code == sf::Keyboard::W)
+				if(event.key.code == sf::Keyboard::Up && player2_->getPosition_().y - player2_->getSpeed().y >= 0)
 				{
 					player2_->moveUp();
 				}
-				else if(event.key.code == sf::Keyboard::S)
+				else if(event.key.code == sf::Keyboard::Down && player2_->getPosition_().y + player2_->getSpeed().y + PADDLE_SIZE.y <= WINDOW_HEIGHT)
 				{
 					player2_->moveDown();
+				}
+			}
+			else if (scene_type_ == Scene::Type::PAUSE)
+			{
+				//RESUME GAME
+				if (event.key.code == sf::Keyboard::F1 && this->paused == true)
+				{
+					setSceneType(Scene::Type::PLAY);
+					scene_->removeObject(pause_text_);					
+					unpause();
+				}
+				//MAIN MENU
+				if (event.key.code == sf::Keyboard::F2 && this->paused == true)
+				{
+					setSceneType(Scene::Type::MENU);
+					unpause();
+					createMenuScene();
+				}
+				//QUIT GAME
+				if (event.key.code == sf::Keyboard::F3 && this->paused == true)
+				{
+					close();
 				}
 			}
 			else
@@ -187,6 +220,7 @@ void GameScreen::changeLevel() {
 void GameScreen::createMenuScene()
 {
 	scene_->clear();
+	game_objects_.clear();
 	customizeButton();
 	auto ptr = std::dynamic_pointer_cast<sf::Shape>(button_);
 	scene_->addObject(button_);
@@ -194,6 +228,7 @@ void GameScreen::createMenuScene()
 void GameScreen::createPlayScene()
 {
 	scene_->clear();
+	game_objects_.clear();
 
 	customizePlayer1();
 	scene_->addObject(player1_);
@@ -203,11 +238,36 @@ void GameScreen::createPlayScene()
 	scene_->addObject(player2_);
 	game_objects_.push_back(player2_);
 
-
 	customizeBall();
 	scene_->addObject(ball_);
 	game_objects_.push_back(ball_);
+
+	initScore(); //see
+	scene_->addObject(score_board_);
 }
+
+void GameScreen::createPauseScene()
+{
+	//PAUSE MENU
+	if (!pause_font_.loadFromFile(FONT_SCORE_PATH))
+	{
+		std::cout << "Erro ao tentar carregar a fonte. Path:" << FONT_PAUSE_PATH << "\n";
+	}
+	pause_text_ = std::make_shared<sf::Text>();
+	pause_text_->setFont(pause_font_);
+	pause_text_->setCharacterSize(FONT_PAUSE_SIZE);
+	pause_text_->setFillColor(FONT_PAUSE_COLOR);
+
+	//DISPLAY PAUSE
+	pause_text_->setString("    PAUSED\n\nresume game\nmain menu\nquit");
+
+	sf::FloatRect pause_bounds = pause_text_->getLocalBounds(); //pega as delimitacoes do retangulo do texto
+	pause_text_->setOrigin(pause_bounds.left + pause_bounds.width / 2, pause_bounds.top + pause_bounds.height / 2);
+	pause_text_->setPosition(WINDOW_WIDTH / 2, WINDOW_HEIGHT / 2);
+
+	scene_->addObject(pause_text_);
+}
+
 void createLevel1Scene() {
 	createPlayScene();
 	createObstacle(std::make_shared<Paddle>(LEVEL1_OBST_RECT));
@@ -232,12 +292,16 @@ void GameScreen::run()
 	bool initialized_menu = true;
 	while (isOpen())
 	{
-		if(scene_type_ == Scene::Type::PLAY)
+		if (scene_type_ == Scene::Type::PLAY)
 		{
 			autoMove(*ball_);
 			ball_->checkCollision(game_objects_);
 			auto obj = std::dynamic_pointer_cast<Movable>(ball_);
 			checkOutOfScreen(obj);
+		}
+		else if (scene_type_ == Scene::Type::PAUSE)
+		{
+			
 		}
 		else{
 			if(!initialized_menu)
@@ -249,10 +313,9 @@ void GameScreen::run()
 		
 		handleInput();
 		scene_->drawObjects();
-		draw(score_board_);
 		display();
-		checkEndLevel();
-
+    checkEndLevel();
+    
 		std::this_thread::sleep_for(33ms);
 	}
 }

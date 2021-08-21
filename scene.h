@@ -8,7 +8,8 @@ class Scene
     public:
             enum class Type{
                 MENU,
-                PLAY
+                PLAY,
+                PAUSE
             };
             Scene(Screen * parent_screen): screen_(parent_screen)
             {
@@ -30,6 +31,10 @@ class Scene
             std::vector<std::shared_ptr<sf::Drawable>>   getObjects()
             {
                 return objects_;
+            }
+            void removeObject(std::shared_ptr<sf::Drawable> obj)
+            {
+                objects_.pop_back();
             }
             void clear()
             {
