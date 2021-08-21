@@ -7,13 +7,11 @@ using namespace std::chrono_literals;
 
 GameScreen::GameScreen(const int width, const int height, const std::string tittle) : Screen(width,height,tittle), tittle_(tittle)
 {
-	
 	auto screen_ptr = dynamic_cast<Screen*>(this);
 
 	scene_ = std::make_shared<Scene>(screen_ptr);
 	createMenuScene();
 	initScore();
-
 
 }
 void GameScreen::customizePlayer1()
@@ -45,6 +43,9 @@ void GameScreen::initScore()
 {
 	player1_score_ = 0;
 	player2_score_ = 0;
+	player1_win_ = 0;
+	player2_win_ = 0;
+	level_ = 0;
 
 	if (!score_font_.loadFromFile(FONT_SCORE_PATH))
 	{
@@ -53,15 +54,24 @@ void GameScreen::initScore()
 	score_board_.setFont(score_font_);
 	score_board_.setCharacterSize(FONT_SCORE_SIZE);
 	score_board_.setFillColor(FONT_SCORE_COLOR);
-	displayScore(0, 0);
+	win1_board_.setFont(score_font_);
+	win1_board_.setCharacterSize(FONT_SCORE_SIZE - 4);
+	win1_board_.setFillColor(FONT_SCORE_COLOR);
+	win2_board_.setFont(score_font_);
+	win2_board_.setCharacterSize(FONT_SCORE_SIZE - 4);
+	win2_board_.setFillColor(FONT_SCORE_COLOR);
+	displayScore(0, 0, 0, 0);
 }
 
-void GameScreen::displayScore(int s1, int s2) {
+void displayScore(unsigned s1, unsigned s2, unsigned w1, unsigned w2) {
 	score_board_.setString(std::to_string(s1) + " : " + std::to_string(s2));
-
+	win1_board_.setString(std::to_string(w1));
+	win2_board_.setString(std::to_string(w2));
 	sf::FloatRect scoreBounds = score_board_.getLocalBounds(); //pega as delimitacoes do retangulo do texto
 	score_board_.setOrigin(scoreBounds.left + scoreBounds.width / 2, scoreBounds.top + scoreBounds.height / 2);
 	score_board_.setPosition(WINDOW_WIDTH / 2, 30);
+	win1_board_.setPosition(20, 30);
+	win2_board_.setPosition(60, 30);
 }
 void GameScreen::handleInput()
 {
@@ -118,13 +128,13 @@ void GameScreen::checkOutOfScreen(std::shared_ptr<Movable> & obj)
 	{
 		obj->restartPosistion();
 		player2_score_++;
-		displayScore(player1_score_, player2_score_);
+		displayScore(player1_score_, player2_score_, player2_score_, player1_win_, player2_win_);
 	}
 	else if (pos.x>WINDOW_WIDTH)
 	{
 		obj->restartPosistion();
 		player1_score_++;
-		displayScore(player1_score_, player2_score_);
+		displayScore(player1_score_, player2_score_, player1_win_, player2_win_);
 	}
 
 	if(pos.y <= 0)
@@ -136,6 +146,44 @@ void GameScreen::checkOutOfScreen(std::shared_ptr<Movable> & obj)
 		obj->changeDirectionToUp();
 	}
 }
+void GameScreen::checkEndLevel() {
+	if(player1_score_ == 2) {
+		level_++;
+		player1_win_++;
+		changeLevel();
+	} else if(player2_score_ == 2) {
+		level_++;
+		player2_win_++;
+		changeLevel();
+	}
+}
+void GameScreen::changeLevel() {
+	displayScore(player1_score_, player2_score_, player1_win_, player2_win_);
+
+	if (level_ > 3) {
+		level_ = 0;
+	}
+
+	ball_->setSpeed(ball_->getSpeed() + SPEED_INC);
+
+	switch (level_)
+	{
+	case 0:
+		createPlayScene();
+	case 1:
+		createLevel1Scene();
+	case 2:
+		/* code */
+	case 3:
+		createLevel3Scene();
+		
+	
+	default:
+		break;
+	}
+
+}
+
 void GameScreen::createMenuScene()
 {
 	scene_->clear();
@@ -159,19 +207,24 @@ void GameScreen::createPlayScene()
 	customizeBall();
 	scene_->addObject(ball_);
 	game_objects_.push_back(ball_);
-
-
 }
-
-void GameScreen::createObstacle() {
-	obstacle1_ = std::make_shared<Paddle>(LEVEL4_OBST1_RECT);
-	obstacle2_ = std::make_shared<Paddle>(LEVEL4_OBST2_RECT);
-	obstacle1_->setFillColor(OBSTACLE_COLOR);
-	obstacle2_->setFillColor(OBSTACLE_COLOR);
-	scene_->addObject(obstacle1_);
-	scene_->addObject(obstacle2_);
-	game_objects_.push_back(obstacle1_);
-	game_objects_.push_back(obstacle2_);
+void createLevel1Scene() {
+	createPlayScene();
+	createObstacle(std::make_shared<Paddle>(LEVEL1_OBST_RECT));
+}
+void createLevel2Scene(){
+	createPlayScene();
+}
+void createLevel3Scene(){
+	createPlayScene();
+	createObstacle(std::make_shared<Paddle>(LEVEL3_OBST1_RECT));
+	createObstacle(std::make_shared<Paddle>(LEVEL3_OBST2_RECT));
+	
+}
+void GameScreen::createObstacle(std::shared_ptr<Paddle> ob) {
+	ob->setFillColor(OBSTACLE_COLOR);
+	scene_->addObject(ob);
+	game_objects_.push_back(ob);
 }
 
 void GameScreen::run()
@@ -198,6 +251,7 @@ void GameScreen::run()
 		scene_->drawObjects();
 		draw(score_board_);
 		display();
+		checkEndLevel();
 
 		std::this_thread::sleep_for(33ms);
 	}

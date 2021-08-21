@@ -42,23 +42,23 @@ const int SPEED_INC = 5;
 // OBSTACLES DEFINITIONS
 const sf::Color OBSTACLE_COLOR = sf::Color(69, 129, 142);
 const sf::Vector2f OBSTACLE_SIZE(15, 120);
-const sf::Rect<float> LEVEL2_OBST_RECT(
+const sf::Rect<float> LEVEL1_OBST_RECT(
     WINDOW_WIDTH/2 - OBSTACLE_SIZE.x/2, WINDOW_HEIGHT/2 - OBSTACLE_SIZE.y/2,
     OBSTACLE_SIZE.x, OBSTACLE_SIZE.y
     );
+const sf::Rect<float> LEVEL2_OBST1_RECT(
+    0, 0,
+    10, 10
+    );
+const sf::Rect<float> LEVEL2_OBST2_RECT(
+    0, 0,
+    10, 10
+    );
 const sf::Rect<float> LEVEL3_OBST1_RECT(
-    0, 0,
-    10, 10
-    );
-const sf::Rect<float> LEVEL3_OBST2_RECT(
-    0, 0,
-    10, 10
-    );
-const sf::Rect<float> LEVEL4_OBST1_RECT(
     150, 50,
     OBSTACLE_SIZE.x, OBSTACLE_SIZE.y
     );
-const sf::Rect<float> LEVEL4_OBST2_RECT(
+const sf::Rect<float> LEVEL3_OBST2_RECT(
     WINDOW_WIDTH - 150, WINDOW_HEIGHT - OBSTACLE_SIZE.y - 50,
     OBSTACLE_SIZE.x, OBSTACLE_SIZE.y
     );
