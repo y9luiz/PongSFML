@@ -23,19 +23,19 @@ const sf::Vector2f PADDLE_SPEED(1, 10);
 const float PLAYER_1_X_POS = 0;
 const float PLAYER_1_Y_POS = 240;
 const sf::Rect<float> PLAYER_1_RECT(PLAYER_1_X_POS, PLAYER_1_Y_POS, PADDLE_SIZE.x, PADDLE_SIZE.y);
-const sf::Color PLAYER_1_COLOR = sf::Color(255, 0, 0);
+const sf::Color PLAYER_1_COLOR = sf::Color(202, 65, 65);
 
 // PLAYER 2 DEFINITIONS 
 const float PLAYER_2_X_POS = WINDOW_WIDTH - PADDLE_SIZE.x;
 const float PLAYER_2_Y_POS = 120;
 const sf::Rect<float> PLAYER_2_RECT(PLAYER_2_X_POS, PLAYER_2_Y_POS, PADDLE_SIZE.x, PADDLE_SIZE.y);
-const sf::Color PLAYER_2_COLOR = sf::Color(0, 0, 255);
+const sf::Color PLAYER_2_COLOR = sf::Color(61, 133, 198);
 
 // BALL DEFINITIONS
 const float BALL_RADIUS = 10;
 const sf::Vector2f BALL_INIT_POSITION = sf::Vector2f((PLAYER_1_X_POS + PLAYER_2_X_POS) / 2, PLAYER_1_Y_POS);
 const sf::Vector2f BALL_SPEED(15, 3);
-const sf::Color BALL_COLOR(0, 255, 0);
+const sf::Color BALL_COLOR(255, 255, 255);
 
 //const sf::Vector2f BALL_INIT_POSITION = sf::Vector2f(PLAYER_1_X_POS, PLAYER_1_Y_POS);
 
@@ -45,7 +45,8 @@ const int SPEED_INCY = 0.02;
 const int SPEED_INCP = 0.2;
 
 // OBSTACLES DEFINITIONS
-const sf::Color OBSTACLE_COLOR = sf::Color(69, 129, 142);
+const sf::Color OBSTACLE_COLOR = sf::Color(102, 102, 102);
+//const sf::Color OBSTACLE_COLOR = sf::Color(103, 78, 167);
 const sf::Vector2f OBSTACLE_SIZE(15, 140);
 const sf::Rect<float> LEVEL1_OBST_RECT(
     WINDOW_WIDTH/2 - OBSTACLE_SIZE.x/2, WINDOW_HEIGHT/2 - OBSTACLE_SIZE.y/2,
