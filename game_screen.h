@@ -47,7 +47,7 @@ class GameScreen : public Screen, public std::enable_shared_from_this<GameScreen
 		sf::Texture texture_;
 		Scene::Type scene_type_;
 		std::vector<std::shared_ptr<sf::Shape>> game_objects_;
-		sf::Text score_board_;
+		std::shared_ptr<sf::Text> score_board_;
 		sf::Font score_font_;
 		unsigned player1_score_;
 		unsigned player2_score_;
