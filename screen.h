@@ -2,7 +2,7 @@
 #include <memory>
 #include <SFML/Graphics.hpp>
 #include <SFML/System/Clock.hpp>
-class Screen : public sf::RenderWindow
+class Screen : public sf::RenderWindow 
 {
 	public:
 		Screen(const int width, const int height, std::string tittle)
@@ -13,6 +13,7 @@ class Screen : public sf::RenderWindow
 		{
 			clock_ = clock;
 		}
+		
 	protected:
 		const std::string tittle_;
 		sf::Clock clock_;
