@@ -61,13 +61,13 @@ class GameScreen : public Screen, public std::enable_shared_from_this<GameScreen
 		Scene::Type scene_type_;
 		std::vector<std::shared_ptr<sf::Shape>> game_objects_;
 		std::shared_ptr<sf::Text> score_board_;
-		sf::Font score_font_;
 		std::shared_ptr<sf::Text> win1_board_;
 		std::shared_ptr<sf::Text> win2_board_;
+		std::shared_ptr<sf::Text> pause_text_;
+		sf::Font score_font_;
+		sf::Font pause_font_;
 		unsigned player1_score_;
 		unsigned player2_score_;
-		std::shared_ptr<sf::Text> pause_text_;
-		sf::Font pause_font_;
 		unsigned player1_win_;
 		unsigned player2_win_;
 		unsigned level_;

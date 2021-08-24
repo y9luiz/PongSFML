@@ -44,7 +44,7 @@ void GameScreen::customizeBall()
 void GameScreen::customizeButton()
 {
 	texture_.loadFromFile(ASSERTS_PATH + "/play_button.png");
-	button_ = std::make_shared<Button>((WINDOW_WIDTH - 150) / 2, WINDOW_HEIGHT / 2 - 40, 150, 40, texture_);
+	button_ = std::make_shared<Button>((WINDOW_WIDTH - 100) / 2, WINDOW_HEIGHT / 2 - 40, 100, 40, texture_);
 }
 
 void GameScreen::initScore()
