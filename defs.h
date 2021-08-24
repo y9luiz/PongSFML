@@ -34,15 +34,15 @@ const sf::Color PLAYER_2_COLOR = sf::Color(61, 133, 198);
 // BALL DEFINITIONS
 const float BALL_RADIUS = 10;
 const sf::Vector2f BALL_INIT_POSITION = sf::Vector2f((PLAYER_1_X_POS + PLAYER_2_X_POS) / 2, PLAYER_1_Y_POS);
-const sf::Vector2f BALL_SPEED(15, 3);
+const sf::Vector2f BALL_SPEED(12, 2);
 const sf::Color BALL_COLOR(255, 255, 255);
 
 //const sf::Vector2f BALL_INIT_POSITION = sf::Vector2f(PLAYER_1_X_POS, PLAYER_1_Y_POS);
 
 //SPEED INCREASEMENT PER LEVEL
-const int SPEED_INCX = 0.5;
-const int SPEED_INCY = 0.02;
-const int SPEED_INCP = 0.2;
+const int SPEED_INCX = 1;
+const int SPEED_INCY = 0.2;
+const int SPEED_INCP = 0.5;
 
 // OBSTACLES DEFINITIONS
 const sf::Color OBSTACLE_COLOR = sf::Color(102, 102, 102);

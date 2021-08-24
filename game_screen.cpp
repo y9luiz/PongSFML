@@ -53,7 +53,6 @@ void GameScreen::initScore()
 	{
 		std::cout << "Erro ao tentar carregar a fonte. Path:" << FONT_SCORE_PATH << "\n";
 	}
-
 	score_board_ = std::make_shared<sf::Text>();
 	score_board_->setFont(score_font_);
 	score_board_->setCharacterSize(FONT_SCORE_SIZE);
@@ -84,8 +83,8 @@ void GameScreen::displayScore(unsigned s1, unsigned s2, unsigned w1, unsigned w2
 	score_board_->setOrigin(scoreBounds.left + scoreBounds.width / 2, scoreBounds.top + scoreBounds.height / 2);
 	score_board_->setPosition(WINDOW_WIDTH / 2, 30);
 
-	win1_board_->setPosition(WINDOW_WIDTH/2 - scoreBounds.width/2 - win1Bounds.width - 20, 15);
-	win2_board_->setPosition(WINDOW_WIDTH/2 + scoreBounds.width/2 + 20, 15);
+	win1_board_->setPosition(WINDOW_WIDTH / 2 - scoreBounds.width / 2 - win1Bounds.width - 20, 15);
+	win2_board_->setPosition(WINDOW_WIDTH / 2 + scoreBounds.width / 2 + 20, 15);
 }
 
 void GameScreen::handleInput()
