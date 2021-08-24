@@ -18,7 +18,8 @@ target_link_libraries(SFMLPong PRIVATE sfml-system sfml-network sfml-graphics sf
 
 include(cmake/file_macros.cmake)
 COPY_FILES_FROM_FOLDER(Assets)
-COPY_FILES_FROM_FOLDER(libs/x64)
-MOVE_DLLS_FROM_FOLDER(${CMAKE_BINARY_DIR}/libs/x64 ${CMAKE_BINARY_DIR})
-
+IF (WIN32)
+	COPY_FILES_FROM_FOLDER(libs/x64)
+	MOVE_DLLS_FROM_FOLDER(${CMAKE_BINARY_DIR}/libs/x64 ${CMAKE_BINARY_DIR})
+ENDIF()
 # TODO: Add tests and install targets if needed.
