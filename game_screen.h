@@ -6,12 +6,36 @@
 #include "collider.h"
 #include "scene.h"
 #include "button.h"
+#include "Net/net.h"
 #include <memory>
+
+class ScoreBoard
+{
+	public:
+		unsigned player1_score_;
+		unsigned player2_score_;
+		unsigned player1_win_;
+		unsigned player2_win_;
+		std::shared_ptr<sf::Text> score_view_;
+
+		std::string toString()
+		{
+			auto player1_score = std::to_string(player1_score_);
+			auto player2_score = std::to_string(player2_score_);
+			auto player1_win = std::to_string(player1_win_);
+			auto player2_win = std::to_string(player2_win_);
+
+			const char sep = ';';  // separator
+			
+			return player1_score + sep + player2_score + sep + player1_win + sep +  player2_win;
+		}
+
+};
 
 class GameScreen : public Screen, public std::enable_shared_from_this<GameScreen>
 {
 	public:
-	
+
 		void run() override;
         static inline std::shared_ptr<GameScreen> create( const int width, const int height, 
 				const std::string tittle)
@@ -25,6 +49,7 @@ class GameScreen : public Screen, public std::enable_shared_from_this<GameScreen
 		{
 			scene_type_ = scene_type;
 		}
+		
 	protected:
 		bool paused;
 
@@ -60,15 +85,12 @@ class GameScreen : public Screen, public std::enable_shared_from_this<GameScreen
 		sf::Texture texture_;
 		Scene::Type scene_type_;
 		std::vector<std::shared_ptr<sf::Shape>> game_objects_;
-		std::shared_ptr<sf::Text> score_board_;
 		std::shared_ptr<sf::Text> win1_board_;
 		std::shared_ptr<sf::Text> win2_board_;
 		std::shared_ptr<sf::Text> pause_text_;
 		sf::Font score_font_;
 		sf::Font pause_font_;
-		unsigned player1_score_;
-		unsigned player2_score_;
-		unsigned player1_win_;
-		unsigned player2_win_;
+		ScoreBoard score_board_;
 		unsigned level_;
+		HostType host_type;
 };

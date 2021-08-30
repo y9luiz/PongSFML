@@ -15,6 +15,8 @@ const std::string FONT_PAUSE_PATH = "Assets/CollegiateOutlineFLF.ttf";
 const sf::Color FONT_PAUSE_COLOR = sf::Color(255, 255, 255);
 const int FONT_PAUSE_SIZE = 50;
 
+const char separator = ';';
+
 // PLAYERS DEFINITIONS
 const sf::Vector2f PADDLE_SIZE(20,150);
 const sf::Vector2f PADDLE_SPEED(1, 10);
@@ -68,3 +70,5 @@ const sf::Rect<float> LEVEL3_OBST2_RECT(
     WINDOW_WIDTH - 150, WINDOW_HEIGHT - OBSTACLE_SIZE.y - 50,
     OBSTACLE_SIZE.x, OBSTACLE_SIZE.y
     );
+
+
