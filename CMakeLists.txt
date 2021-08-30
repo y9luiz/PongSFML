@@ -16,7 +16,10 @@ find_package(SFML COMPONENTS system window graphics CONFIG REQUIRED)
 add_executable (SFMLPong "SFMLPong.cpp" "SFMLPong.h" "defs.h" "paddle.h" "paddle.cpp" "collider.h" "ball.h" "ball.cpp" "circle.h" "screen.h" "game_screen.h" "game_screen.cpp" "button.h" "button.cpp")
 target_link_libraries(SFMLPong PRIVATE sfml-system sfml-network sfml-graphics sfml-window)
 
-include(cmake/macro_copy_assets.cmake)
-COPY_ASSETS()
-
+include(cmake/file_macros.cmake)
+COPY_FILES_FROM_FOLDER(Assets)
+IF (WIN32)
+	COPY_FILES_FROM_FOLDER(libs/x64)
+	MOVE_DLLS_FROM_FOLDER(${CMAKE_BINARY_DIR}/libs/x64 ${CMAKE_BINARY_DIR})
+ENDIF()
 # TODO: Add tests and install targets if needed.
