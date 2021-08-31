@@ -7,6 +7,7 @@
 #include "scene.h"
 #include "button.h"
 #include "Net/net.h"
+#include <unordered_map>
 #include <memory>
 
 class ScoreBoard
@@ -81,7 +82,7 @@ class GameScreen : public Screen, public std::enable_shared_from_this<GameScreen
 		//std::shared_ptr<Paddle> obstacle1_;
 		//std::shared_ptr<Paddle> obstacle2_;
 		std::shared_ptr<Scene> scene_;
-		std::vector<std::shared_ptr<Button>> buttons_;
+		std::unordered_map<std::string,std::shared_ptr<Button>> buttons_;
 		sf::Texture texture_;
 		Scene::Type scene_type_;
 		std::vector<std::shared_ptr<sf::Shape>> game_objects_;

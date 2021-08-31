@@ -46,10 +46,10 @@ void GameScreen::customizeBall()
 void GameScreen::customizeButtons()
 {
 
-	buttons_.push_back( 
-			std::make_shared<Button>((WINDOW_WIDTH - 150) / 2, WINDOW_HEIGHT / 2 - 60,"Play Local", menu_font_));
-	buttons_.push_back(
-		std::make_shared<Button>((WINDOW_WIDTH - 150) / 2, WINDOW_HEIGHT / 2 - 20, "Multiplayer", menu_font_));
+	buttons_["localplay"] =
+			std::make_shared<Button>((WINDOW_WIDTH - 150) / 2, WINDOW_HEIGHT / 2 - 60,"Local Play", menu_font_);
+	buttons_["multiplayer"] = 
+		std::make_shared<Button>((WINDOW_WIDTH - 150) / 2, WINDOW_HEIGHT / 2 - 20, "Multiplayer", menu_font_);
 }
 
 void GameScreen::initScore()
@@ -167,10 +167,16 @@ void GameScreen::handleInput()
 					auto ptr = getPtr(); // reference to this
 					auto position = sf::Mouse::getPosition(*ptr);
 
-					if (buttons_[0]->isInside(position.x,position.y))
+					if (buttons_["localplay"]->isInside(position.x, position.y))
 					{
 						scene_type_ = Scene::Type::PLAY;
 						host_type_ = HostType::LOCALHOST;
+						createPlayScene();
+					}
+					else if (buttons_["multiplayer"]->isInside(position.x, position.y))
+					{
+						scene_type_ = Scene::Type::PLAY;
+						host_type_ = HostType::MULTIPLAYER;
 						createPlayScene();
 					}
 				}
@@ -262,7 +268,7 @@ void GameScreen::createMenuScene()
 	customizeButtons();
 	for (const auto & button : buttons_)
 	{
-		scene_->addObject(button);
+		scene_->addObject(button.second);
 	}
 
 }
