@@ -346,6 +346,11 @@ void GameScreen::run()
 			auto obj = std::dynamic_pointer_cast<Movable>(ball_);
 			checkOutOfScreen(obj);
 		}
+		else if (scene_type_ == Scene::Type::PLAY && host_type_ == HostType::MULTIPLAYER)
+		{
+			/* DO THE NET STUFFS HERE*/
+			std::cout << "you must to connect with the server\n";
+		}
 		else if (scene_type_ == Scene::Type::PAUSE)
 		{
 			
