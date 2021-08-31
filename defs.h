@@ -15,6 +15,9 @@ const std::string FONT_PAUSE_PATH = "Assets/CollegiateOutlineFLF.ttf";
 const sf::Color FONT_PAUSE_COLOR = sf::Color(255, 255, 255);
 const int FONT_PAUSE_SIZE = 50;
 
+const std::string FONT_MENU_PATH = "Assets/CollegiateOutlineFLF.ttf";
+
+
 const char separator = ';';
 
 // PLAYERS DEFINITIONS

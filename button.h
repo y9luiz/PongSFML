@@ -1,23 +1,19 @@
 #pragma once
 #include <SFML/Graphics.hpp>
 #include <memory>
-class Button : public sf::Sprite
+#include <string>
+class Button : public sf::Text
 {
     public:
-        Button(const int x, const int y, const int width, const int height, const sf::Texture& texture);
-        Button(const int x, const int y, const int width, const int height);
+        Button::Button(const int x, const int y, const std::string& text, const sf::Font & font);
+
         inline bool isInside(int x, int y)
         {
-            auto position = getPosition();
-          
-            return ((x >= position.x) && (x  <= position.x + width_) &&
-                (y >= position.y) && (y  <= position.y + height_));
+           
+            sf::FloatRect global_rect = getGlobalBounds();
+            return global_rect.contains(x, y);
                     
         }
     protected:
-        std::shared_ptr<sf::Texture>  texture_;
-        int width_;
-        int height_;
-
-
+        std::shared_ptr<sf::Text> text_view_;
 };

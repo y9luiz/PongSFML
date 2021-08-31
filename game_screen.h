@@ -64,7 +64,7 @@ class GameScreen : public Screen, public std::enable_shared_from_this<GameScreen
 		void customizePlayer1();
 		void customizePlayer2();
 		void customizeBall();
-		void customizeButton();
+		void customizeButtons();
 		void initScore();
 		void displayScore(unsigned s1, unsigned s2, unsigned w1, unsigned w2);
 		void createObstacle(std::shared_ptr<Paddle> ob);
@@ -81,7 +81,7 @@ class GameScreen : public Screen, public std::enable_shared_from_this<GameScreen
 		//std::shared_ptr<Paddle> obstacle1_;
 		//std::shared_ptr<Paddle> obstacle2_;
 		std::shared_ptr<Scene> scene_;
-		std::shared_ptr<Button> button_;
+		std::vector<std::shared_ptr<Button>> buttons_;
 		sf::Texture texture_;
 		Scene::Type scene_type_;
 		std::vector<std::shared_ptr<sf::Shape>> game_objects_;
@@ -90,7 +90,8 @@ class GameScreen : public Screen, public std::enable_shared_from_this<GameScreen
 		std::shared_ptr<sf::Text> pause_text_;
 		sf::Font score_font_;
 		sf::Font pause_font_;
+		sf::Font menu_font_;
 		ScoreBoard score_board_;
 		unsigned level_;
-		HostType host_type;
+		HostType host_type_;
 };

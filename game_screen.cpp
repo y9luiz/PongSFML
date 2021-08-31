@@ -43,10 +43,13 @@ void GameScreen::customizeBall()
 	ball_->setSpeed(BALL_SPEED);
 }
 
-void GameScreen::customizeButton()
+void GameScreen::customizeButtons()
 {
-	texture_.loadFromFile(ASSERTS_PATH + "/play_button.png");
-	button_ = std::make_shared<Button>((WINDOW_WIDTH - 100) / 2, WINDOW_HEIGHT / 2 - 40, 100, 40, texture_);
+
+	buttons_.push_back( 
+			std::make_shared<Button>((WINDOW_WIDTH - 150) / 2, WINDOW_HEIGHT / 2 - 60,"Play Local", menu_font_));
+	buttons_.push_back(
+		std::make_shared<Button>((WINDOW_WIDTH - 150) / 2, WINDOW_HEIGHT / 2 - 20, "Multiplayer", menu_font_));
 }
 
 void GameScreen::initScore()
@@ -116,7 +119,7 @@ void GameScreen::handleInput()
 				{
 					player1_->moveDown();
 				}
-				if (host_type == HostType::LOCALHOST)
+				if (host_type_ == HostType::LOCALHOST)
 				{
 					if (event.key.code == sf::Keyboard::Up && player2_->getPosition_().y - player2_->getSpeed().y >= 0)
 					{
@@ -164,10 +167,10 @@ void GameScreen::handleInput()
 					auto ptr = getPtr(); // reference to this
 					auto position = sf::Mouse::getPosition(*ptr);
 
-					if (button_->isInside(position.x,position.y))
+					if (buttons_[0]->isInside(position.x,position.y))
 					{
 						scene_type_ = Scene::Type::PLAY;
-						host_type = HostType::LOCALHOST;
+						host_type_ = HostType::LOCALHOST;
 						createPlayScene();
 					}
 				}
@@ -253,11 +256,15 @@ void GameScreen::changeLevel() {
 
 void GameScreen::createMenuScene()
 {
+	menu_font_.loadFromFile(FONT_MENU_PATH);
 	scene_->clear();
 	game_objects_.clear();
-	customizeButton();
-	auto ptr = std::dynamic_pointer_cast<sf::Shape>(button_);
-	scene_->addObject(button_);
+	customizeButtons();
+	for (const auto & button : buttons_)
+	{
+		scene_->addObject(button);
+	}
+
 }
 void GameScreen::createPlayScene()
 {
@@ -326,7 +333,7 @@ void GameScreen::run()
 	bool initialized_menu = true;
 	while (isOpen())
 	{
-		if (scene_type_ == Scene::Type::PLAY && host_type == HostType::LOCALHOST)
+		if (scene_type_ == Scene::Type::PLAY && host_type_ == HostType::LOCALHOST)
 		{
 			autoMove(*ball_);
 			ball_->checkCollision(game_objects_);
