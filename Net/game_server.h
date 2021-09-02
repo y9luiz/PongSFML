@@ -24,7 +24,6 @@ class GameServer
 		std::queue<sf::Packet> in_packets_;
 		std::queue<sf::Packet> out_packets_;
 
-		sf::SocketSelector selector_;
 		bool blocking;
 		int port_;
 		static sf::Vector2f ball_position_;

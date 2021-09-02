@@ -25,6 +25,7 @@ int main(int argc, char* argv[])
 	sf::Packet packet;
 	std::string msg = "hello world from client ";
 	msg += argv[2];
+	msg += '\0';
 	packet.append(msg.c_str(), msg.size());
 	if (game_client.sendPacket(packet))
 		std::cout << "good \n";

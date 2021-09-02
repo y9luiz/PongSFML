@@ -17,7 +17,6 @@ bool GameServer::checkForNewConnections()
 		std::string ip = client->getRemoteAddress().toString();
 		std::pair<std::string, std::shared_ptr<sf::TcpSocket>> client_pair(ip,client);
 		clients_map_.insert(client_pair);
-		selector_.add(*client);
 		return true;
 	}
 	
@@ -71,15 +70,14 @@ void GameServer::sendPacketToClients(sf::Packet & packet )
 	for (auto& client_pair : clients_map_)
 	{
 		auto client = client_pair.second;
-		if (selector_.isReady(*client))
+		
+		// packet send routine
+		if (client->send(packet) == sf::Socket::Done)
 		{
-			// packet send routine
-			if (client->send(packet) == sf::Socket::Done)
-			{
-				std::cout << "packet sent\n";
-				//	we need to send the ball position to the client
-			}
+			std::cout << "packet sent\n";
+			//	we need to send the ball position to the client
 		}
+		
 	}
 
 }
