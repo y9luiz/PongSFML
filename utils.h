@@ -1,13 +1,16 @@
-#pragma once
+#ifndef  __UTILS_H__
+#define __UTILS_H__
 #include <SFML/System.hpp>
 #include <vector>
 #include <string>
 #include "defs.h"
+#include <SFML/System/Vector2.hpp>
+#include <cassert>
+
 std::vector<std::string> splitString( std::string  text,char delimiter)
 {
 	std::vector<std::string> words{};
 	size_t pos;
-	std::cout << text << "\n";
 	int start = 0;
 	int end;
 	while ((pos = text.find(delimiter)) != std::string::npos) {
@@ -34,3 +37,4 @@ sf::Vector2f stdStringTosfVector(const std::string & s)
 	assert(fields.size() == 2);
 	return sf::Vector2f(atoi(fields[0].data()), atoi(fields[1].data()));
 }
+#endif // ! UTILS

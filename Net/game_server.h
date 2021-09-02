@@ -3,22 +3,32 @@
 #include <SFML/System.hpp>
 #include <list>
 #include "../defs.h"
+#include <queue>
+#include <unordered_map>
 class GameServer
 {
 	public:
 		GameServer(int port = 5000,bool blocking = false);
 		bool checkForNewConnections();
+		void waitForClients();
+		void notifyClients();
 		void receivePacketsFromClients();
-		void sendPacketsToClients();
+		void sendPacketToClients(sf::Packet& packet);
+		void sendAllPacketsToClients(sf::Packet& packet);
 
 	private:
-
+		void updateGameState();
 		sf::TcpListener listener_;
-		std::list<std::shared_ptr<sf::TcpSocket>> clients_;
+		
+		std::unordered_map<std::string, std::shared_ptr<sf::TcpSocket>> clients_map_;
+		std::queue<sf::Packet> in_packets_;
+		std::queue<sf::Packet> out_packets_;
+
 		sf::SocketSelector selector_;
 		bool blocking;
 		int port_;
 		static sf::Vector2f ball_position_;
 		static sf::Vector2f ball_speed_;
 		unsigned numb_clients_ = 0;
+		const char addr_separator_ = '$';
 };
