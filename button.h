@@ -5,7 +5,7 @@
 class Button : public sf::Text
 {
     public:
-        Button::Button(const int x, const int y, const std::string& text, const sf::Font & font);
+        Button(const int x, const int y, const std::string& text, const sf::Font & font);
 
         inline bool isInside(int x, int y)
         {

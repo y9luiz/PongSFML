@@ -1,5 +1,5 @@
 #pragma once
-#include <SFML/network.hpp>
+#include <SFML/Network.hpp>
 #include <SFML/System.hpp>
 #include <string>
 #include <memory>

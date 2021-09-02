@@ -1,10 +1,11 @@
 #pragma once
-#include <SFML/network.hpp>
+#include <SFML/Network.hpp>
 #include <SFML/System.hpp>
 #include <list>
 #include "../defs.h"
 #include <queue>
 #include <unordered_map>
+#include <memory>
 class GameServer
 {
 	public:
