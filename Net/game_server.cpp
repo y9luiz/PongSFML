@@ -13,11 +13,15 @@ bool GameServer::checkForNewConnections()
 	auto client = std::make_shared<sf::TcpSocket>();
 	if (listener_.accept(*client) == sf::Socket::Done)
 	{
-		numb_clients_++;
+		
 		std::string ip = client->getRemoteAddress().toString();
 		std::pair<std::string, std::shared_ptr<sf::TcpSocket>> client_pair(ip,client);
-		clients_map_.insert(client_pair);
-		return true;
+		if (clients_map_.find(ip) == clients_map_.end())
+		{
+			clients_map_.insert(client_pair);
+			return true;
+		}
+		std::cout << ip << " already added\n";
 	}
 	
 	return false;
@@ -26,14 +30,18 @@ void GameServer::waitForClients()
 {
 	while (numb_clients_ < 2)
 	{
-		checkForNewConnections();
+		if (checkForNewConnections())
+		{
+			numb_clients_++;
+		}
 		std::this_thread::sleep_for(1ms);
 	}
+
 }
 void GameServer::notifyClients()
 {
 	sf::Packet packet;
-	packet << true;
+	packet << false;
 	sendPacketToClients(packet);
 }
 void GameServer::receivePacketsFromClients()
@@ -46,7 +54,7 @@ void GameServer::receivePacketsFromClients()
 		auto client = client_pair.second;
 
 		// packet receive routine
-		sf::Packet packet;
+		GamePacket packet;
 		if (client->receive(packet) == sf::Socket::Done)
 		{
 			std::cout << "packet received...\n";

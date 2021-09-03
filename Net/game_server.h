@@ -5,6 +5,7 @@
 #include "../defs.h"
 #include <queue>
 #include <unordered_map>
+#include "game_packet.h"
 class GameServer
 {
 	public:
@@ -21,8 +22,9 @@ class GameServer
 		sf::TcpListener listener_;
 		
 		std::unordered_map<std::string, std::shared_ptr<sf::TcpSocket>> clients_map_;
-		std::queue<sf::Packet> in_packets_;
-		std::queue<sf::Packet> out_packets_;
+
+		std::queue<GamePacket> in_packets_;
+		std::queue<GamePacket> out_packets_;
 
 		bool blocking;
 		int port_;
