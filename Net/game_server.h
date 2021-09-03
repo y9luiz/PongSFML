@@ -18,6 +18,9 @@ class GameServer
 		void sendPacketToClients(GamePacket& packet);
 		void sendAllPacketsToClients();
 		void run();
+		static sf::Vector2f ball_position_;
+		static sf::Vector2f ball_speed_;
+		static int numb_clients_;
 	private:
 		void updateGameState();
 		sf::TcpListener listener_;
@@ -29,9 +32,6 @@ class GameServer
 
 		bool blocking;
 		int port_;
-		static sf::Vector2f ball_position_;
-		static sf::Vector2f ball_speed_;
-		static int numb_clients_;
 		const char addr_separator_ = '$';
 
 		bool running_;

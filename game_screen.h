@@ -53,7 +53,8 @@ class GameScreen : public Screen, public std::enable_shared_from_this<GameScreen
 		{
 			client_ = std::make_shared<GameClient>(server_address);
 		}
-		
+		static std::shared_ptr<GameClient> client_;
+
 	protected:
 		bool paused;
 
@@ -99,5 +100,4 @@ class GameScreen : public Screen, public std::enable_shared_from_this<GameScreen
 		ScoreBoard score_board_;
 		unsigned level_;
 		HostType host_type_;
-		static std::shared_ptr<GameClient> client_;
 };

@@ -3,6 +3,7 @@
 #include <SFML/System.hpp>
 #include <string>
 #include <memory>
+#include "game_packet.h"
 class GameClient
 {
 	public:
@@ -18,7 +19,7 @@ class GameClient
 		//	 0 is the left
 		//	 1 is the right
 		void waitForPlayerIndex();
-		sf::Packet receivePacket();
+		GamePacket receivePacket();
 		uint8_t getPlayerIndex()
 		{
 			return player_idx_;

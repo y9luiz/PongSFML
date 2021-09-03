@@ -6,7 +6,7 @@
 #include "utils.h"
 
 using namespace std::chrono_literals;
-
+std::shared_ptr<GameClient> GameScreen::client_ = nullptr;
 GameScreen::GameScreen(const int width, const int height, const std::string tittle) : Screen(width,height,tittle), tittle_(tittle)
 {
 	auto screen_ptr = dynamic_cast<Screen*>(this);

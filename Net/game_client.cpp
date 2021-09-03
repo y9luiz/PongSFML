@@ -19,10 +19,11 @@ bool GameClient::sendPacket(sf::Packet & packet)
 {
 	return socket_->send(packet) == sf::TcpSocket::Status::Done;
 }
-sf::Packet GameClient::receivePacket()
+GamePacket GameClient::receivePacket()
 {
-	sf::Packet packet;
-	socket_->receive(packet);
+	GamePacket packet;
+	sf::Packet * ptr = (sf::Packet*) &packet;
+	socket_->receive(*ptr);
 	return packet;
 }
 void GameClient::waitForPlayerIndex()

@@ -4,8 +4,12 @@
 #include <iostream>
 #include "../ball.h"
 #include "../paddle.h"
+//#include "../utils.h"
 using namespace std::chrono_literals;
 int GameServer::numb_clients_ = 0;
+sf::Vector2f GameServer::ball_position_ = sf::Vector2f(0, 0);
+sf::Vector2f GameServer::ball_speed_ = sf::Vector2f(0, 0);
+
 GameServer::GameServer(int port,bool blocking):port_(port)
 {
 	listener_.setBlocking(blocking);
@@ -106,14 +110,14 @@ void GameServer::updateGameState()
 {
 	while (!in_packets_.empty())
 	{
-		auto packet = in_packets_.front();
+		/*auto packet = in_packets_.front();
 		std::string str = (char *) packet.getData();
 		auto splitted_data = splitString(str, addr_separator_);
 		
 		sf::IpAddress ip(splitted_data.back());
 		auto position = stdStringTosfVector(splitted_data[0]);
 		
-		in_packets_.pop();
+		in_packets_.pop();*/
 	}
 }
 
