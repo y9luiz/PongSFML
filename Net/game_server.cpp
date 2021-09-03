@@ -2,7 +2,10 @@
 #include <chrono>
 #include <thread>
 #include <iostream>
+#include "../ball.h"
+#include "../paddle.h"
 using namespace std::chrono_literals;
+int GameServer::numb_clients_ = 0;
 GameServer::GameServer(int port,bool blocking):port_(port)
 {
 	listener_.setBlocking(blocking);
@@ -13,7 +16,6 @@ bool GameServer::checkForNewConnections()
 	auto client = std::make_shared<sf::TcpSocket>();
 	if (listener_.accept(*client) == sf::Socket::Done)
 	{
-		
 		std::string ip = client->getRemoteAddress().toString();
 		std::pair<std::string, std::shared_ptr<sf::TcpSocket>> client_pair(ip,client);
 		if (clients_map_.find(ip) == clients_map_.end())
@@ -38,10 +40,11 @@ void GameServer::waitForClients()
 	}
 
 }
+unsigned client_idx = 0;
 void GameServer::notifyClients()
 {
-	sf::Packet packet;
-	packet << false;
+	GamePacket packet;
+	packet << client_idx++;
 	sendPacketToClients(packet);
 }
 void GameServer::receivePacketsFromClients()
@@ -73,7 +76,7 @@ void GameServer::receivePacketsFromClients()
 
 	}
 }
-void GameServer::sendPacketToClients(sf::Packet & packet )
+void GameServer::sendPacketToClients(GamePacket & packet )
 {
 	for (auto& client_pair : clients_map_)
 	{
@@ -89,7 +92,7 @@ void GameServer::sendPacketToClients(sf::Packet & packet )
 	}
 
 }
-void GameServer::sendAllPacketsToClients(sf::Packet& packet)
+void GameServer::sendAllPacketsToClients()
 {
 	while (!out_packets_.empty())
 	{
@@ -103,13 +106,62 @@ void GameServer::updateGameState()
 {
 	while (!in_packets_.empty())
 	{
-		/*auto packet = in_packets_.front();
+		auto packet = in_packets_.front();
 		std::string str = (char *) packet.getData();
 		auto splitted_data = splitString(str, addr_separator_);
 		
 		sf::IpAddress ip(splitted_data.back());
 		auto position = stdStringTosfVector(splitted_data[0]);
 		
-		in_packets_.pop();*/
+		in_packets_.pop();
+	}
+}
+
+void GameServer::run()
+{
+	running_ = true;
+
+	Ball ball(BALL_INIT_POSITION,BALL_RADIUS);
+	ball.setSpeed(BALL_SPEED);
+
+	Paddle player1(PLAYER_1_RECT);
+	Paddle player2(PLAYER_2_RECT);
+	
+	while (running_)
+	{
+		// send the ball position
+		ball_position_ = ball.getPosition();
+		GamePacket ball_position_pack;
+		ball_position_pack << ball_position_;
+		out_packets_.push(ball_position_pack);
+
+		/*
+		*	receive packages with the position of each client
+		*/
+		receivePacketsFromClients(); // this function also addeds the client address at the end of packet
+
+		int idx = 0;
+		for (const auto& client_pair : clients_map_)
+		{
+			auto pos = sf::Vector2f(0, 0);
+			auto game_packet = in_packets_.front();
+			out_packets_.push(game_packet);
+			game_packet >> pos;
+
+			if (idx == 0)
+			{
+				player1.setPosition(pos);
+			}
+			else if(idx == 1)
+			{
+				player2.setPosition(pos);
+			}
+			idx++;
+		}
+		
+		autoMove(ball);
+
+		sendAllPacketsToClients();
+
 	}
 }

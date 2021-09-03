@@ -11,7 +11,8 @@ bool GameClient::connect()
 {
 	sf::IpAddress ip_address(address_);
 	auto status = socket_->connect(ip_address, port_);
-	return status == sf::TcpSocket::Done;
+	is_connected_ = status == sf::TcpSocket::Done;
+	return is_connected_;
 }
 
 bool GameClient::sendPacket(sf::Packet & packet)
@@ -23,4 +24,10 @@ sf::Packet GameClient::receivePacket()
 	sf::Packet packet;
 	socket_->receive(packet);
 	return packet;
+}
+void GameClient::waitForPlayerIndex()
+{
+	sf::Packet packet = receivePacket();
+	player_idx_ = -1;
+	packet >> player_idx_;
 }

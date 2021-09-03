@@ -15,9 +15,9 @@ class GameServer
 		void waitForClients();
 		void notifyClients();
 		void receivePacketsFromClients();
-		void sendPacketToClients(sf::Packet& packet);
-		void sendAllPacketsToClients(sf::Packet& packet);
-
+		void sendPacketToClients(GamePacket& packet);
+		void sendAllPacketsToClients();
+		void run();
 	private:
 		void updateGameState();
 		sf::TcpListener listener_;
@@ -31,6 +31,8 @@ class GameServer
 		int port_;
 		static sf::Vector2f ball_position_;
 		static sf::Vector2f ball_speed_;
-		unsigned numb_clients_ = 0;
+		static int numb_clients_;
 		const char addr_separator_ = '$';
+
+		bool running_;
 };

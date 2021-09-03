@@ -42,14 +42,16 @@ class GameScreen : public Screen, public std::enable_shared_from_this<GameScreen
         static inline std::shared_ptr<GameScreen> create( const int width, const int height, 
 				const std::string tittle)
         {
-			
 			return std::shared_ptr<GameScreen>(new GameScreen(width,height,tittle));
-
         }
         std::shared_ptr<GameScreen> getPtr(){return shared_from_this();};
 		inline void setSceneType(Scene::Type scene_type)
 		{
 			scene_type_ = scene_type;
+		}
+		static inline void createClient(const std::string& server_address)
+		{
+			client_ = std::make_shared<GameClient>(server_address);
 		}
 		
 	protected:
@@ -76,6 +78,7 @@ class GameScreen : public Screen, public std::enable_shared_from_this<GameScreen
 		void checkOutOfScreen(std::shared_ptr<Movable> & obj);
 		inline void pause() { this->paused = true; }
 		inline void unpause() { this->paused = false; }
+		
 		std::string tittle_;
 		std::shared_ptr<Ball> ball_;
 		std::shared_ptr<Paddle> player1_;
@@ -96,4 +99,5 @@ class GameScreen : public Screen, public std::enable_shared_from_this<GameScreen
 		ScoreBoard score_board_;
 		unsigned level_;
 		HostType host_type_;
+		static std::shared_ptr<GameClient> client_;
 };

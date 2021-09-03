@@ -16,6 +16,8 @@ int main()
 {
 	std::shared_ptr<GameScreen> screen = GameScreen::create(WINDOW_WIDTH, WINDOW_HEIGHT, "Play");
 
+	screen->createClient("localhost");
+
 	screen->run();
 		
 	return 0;

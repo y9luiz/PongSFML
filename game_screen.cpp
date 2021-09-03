@@ -349,7 +349,56 @@ void GameScreen::run()
 		else if (scene_type_ == Scene::Type::PLAY && host_type_ == HostType::MULTIPLAYER)
 		{
 			/* DO THE NET STUFFS HERE*/
-			std::cout << "you must to connect with the server\n";
+			if (client_ == nullptr)
+			{
+				std::cerr << "you must to initialize the client pointer\n";
+				abort();
+			}
+			else if(!client_->isConnected()){
+				std::cout << "connecting to the server...\n";
+				client_->connect();
+				std::cout << "waiting for the other clients ...\n";
+				do
+				{
+					client_->waitForPlayerIndex();
+				} while (client_->getPlayerIndex()>1);
+			}
+			else 
+			{
+				std::cout << "ready\n";
+
+				GamePacket packet;
+
+				// receive the ball position
+				packet = client_->receivePacket();
+				sf::Vector2f ball_pos;
+				packet >> ball_pos;
+				ball_->setPosition(ball_pos);
+
+				packet.clear();
+
+
+				std::shared_ptr<Paddle> player;
+				// send paddle position
+				switch (client_->getPlayerIndex())
+				{
+					case 0:
+						player = player1_;
+						break;
+					case 1:
+						player = player2_;
+						break;
+					default:
+						std::cerr << "could not to retrieve the player index\n";
+						abort();
+						break;
+				}
+
+				auto paddle_pos = player->getPosition();
+				packet << paddle_pos;
+				client_->sendPacket(packet);
+
+			}
 		}
 		else if (scene_type_ == Scene::Type::PAUSE)
 		{
