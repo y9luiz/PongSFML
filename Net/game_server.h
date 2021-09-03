@@ -6,6 +6,7 @@
 #include <queue>
 #include <unordered_map>
 #include <memory>
+#include "game_packet.h"
 class GameServer
 {
 	public:
