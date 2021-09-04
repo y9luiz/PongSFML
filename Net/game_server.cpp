@@ -157,6 +157,8 @@ void GameServer::run()
 
 	ScoreBoard scoreboard;
 
+	const int max_partial_score = 3;
+
 	while (running_)
 	{
 		ball_position_ = ball->getPosition(); // push ball position
@@ -222,6 +224,12 @@ void GameServer::run()
 		if (checkOutOfLimitsBoundary(ball))
 		{
 			auto pos = ball->getPosition();
+
+			auto resetPartialScore =[&scoreboard](){
+				scoreboard.player1_score = 0;
+				scoreboard.player2_score = 0;
+			};
+
 			if (pos.x < 0)
 			{
 				scoreboard.player2_score++;
@@ -243,6 +251,16 @@ void GameServer::run()
 			{
 				ball->changeDirectionToUp();
 				std::cout << "MUDOU A DIREÇÃO PARA CIMA\n";
+			}
+			if (scoreboard.player1_score >= max_partial_score)
+			{
+				resetPartialScore();
+				scoreboard.player1_win++;
+			}
+			else if (scoreboard.player2_score >= max_partial_score)
+			{
+				resetPartialScore();
+				scoreboard.player2_win++;
 			}
 		}
 		GamePacket scoreboard_packet;
