@@ -104,23 +104,24 @@ void GameScreen::handleInput()
 		{
 			if( scene_type_ == Scene::Type::PLAY)
 			{
-				//PAUSE GAME
-				if (event.key.code == sf::Keyboard::Escape && this->paused == false)
-				{
-					pause();
-					setSceneType(Scene::Type::PAUSE);
-					createPauseScene();
-				}
-				if (event.key.code == sf::Keyboard::W && player1_->getPosition_().y - player1_->getSpeed().y >= 0)
-				{
-					player1_->moveUp();
-				}
-				else if (event.key.code == sf::Keyboard::S && player1_->getPosition_().y + player1_->getSpeed().y + PADDLE_SIZE.y <= WINDOW_HEIGHT)
-				{
-					player1_->moveDown();
-				}
 				if (host_type_ == HostType::LOCALHOST)
 				{
+					//PAUSE GAME
+					if (event.key.code == sf::Keyboard::Escape && this->paused == false)
+					{
+						pause();
+						setSceneType(Scene::Type::PAUSE);
+						createPauseScene();
+					}
+					if (event.key.code == sf::Keyboard::W && player1_->getPosition_().y - player1_->getSpeed().y >= 0)
+					{
+						player1_->moveUp();
+					}
+					else if (event.key.code == sf::Keyboard::S && player1_->getPosition_().y + player1_->getSpeed().y + PADDLE_SIZE.y <= WINDOW_HEIGHT)
+					{
+						player1_->moveDown();
+					}
+
 					if (event.key.code == sf::Keyboard::Up && player2_->getPosition_().y - player2_->getSpeed().y >= 0)
 					{
 						player2_->moveUp();
@@ -130,6 +131,31 @@ void GameScreen::handleInput()
 						player2_->moveDown();
 					}
 				}
+				else if (host_type_ == HostType::MULTIPLAYER)
+				{
+					std::shared_ptr<Paddle> player;
+					switch (client_->getPlayerIndex())
+					{
+						case 0:
+							player = player1_;
+							break;
+						case 1:
+							player = player2_;
+							break;
+						default:
+							std::cout << "could not to retrieve the player index\n";
+							break;
+					}
+					if (event.key.code == sf::Keyboard::W && player1_->getPosition_().y - player1_->getSpeed().y >= 0)
+					{
+						player->moveUp();
+					}
+					else if (event.key.code == sf::Keyboard::S && player1_->getPosition_().y + player1_->getSpeed().y + PADDLE_SIZE.y <= WINDOW_HEIGHT)
+					{
+						player->moveDown();
+					}
+				}
+				
 				
 			
 			}
