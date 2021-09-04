@@ -371,15 +371,6 @@ void GameScreen::run()
 
 				GamePacket packet;
 
-				// receive the ball position
-				packet = client_->receivePacket();
-				sf::Vector2f ball_pos;
-				packet >> ball_pos;
-				ball_->setPosition(ball_pos);
-
-				packet.clear();
-
-
 				std::shared_ptr<Paddle> player;
 				// send paddle position
 				switch (client_->getPlayerIndex())
@@ -397,8 +388,21 @@ void GameScreen::run()
 				}
 
 				auto paddle_pos = player->getPosition();
+				std::cout << "sending paddle position\n";
 				packet << paddle_pos;
 				client_->sendPacket(packet);
+
+
+				// receive the ball position
+				std::cout << "receiving ball position\n";
+				packet = client_->receivePacket();
+				std::cout << "received ball position\n";
+				sf::Vector2f ball_pos;
+				packet >> ball_pos;
+				ball_->setPosition(ball_pos);
+
+				packet.clear();
+
 
 			}
 		}
