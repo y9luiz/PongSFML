@@ -16,10 +16,10 @@ GameScreen::GameScreen(const int width, const int height, const std::string titt
 	customizeBall();
 	customizePlayer1();
 	customizePlayer2();
-	score_board_.player1_score_ = 0;
-	score_board_.player2_score_ = 0;
-	score_board_.player1_win_ = 0;
-	score_board_.player2_win_ = 0;
+	score_board_.player1_score = 0;
+	score_board_.player2_score = 0;
+	score_board_.player1_win = 0;
+	score_board_.player2_win = 0;
 	level_ = 0;
 }
 void GameScreen::customizePlayer1()
@@ -58,10 +58,10 @@ void GameScreen::initScore()
 	{
 		std::cout << "Erro ao tentar carregar a fonte. Path:" << FONT_SCORE_PATH << "\n";
 	}
-	score_board_.score_view_ = std::make_shared<sf::Text>();
-	score_board_.score_view_->setFont(score_font_);
-	score_board_.score_view_->setCharacterSize(FONT_SCORE_SIZE);
-	score_board_.score_view_->setFillColor(FONT_SCORE_COLOR);
+	score_board_.score_view = std::make_shared<sf::Text>();
+	score_board_.score_view->setFont(score_font_);
+	score_board_.score_view->setCharacterSize(FONT_SCORE_SIZE);
+	score_board_.score_view->setFillColor(FONT_SCORE_COLOR);
 
 	win1_board_ = std::make_shared<sf::Text>();
 	win1_board_->setFont(score_font_);
@@ -73,20 +73,21 @@ void GameScreen::initScore()
 	win2_board_->setCharacterSize(FONT_SCORE_SIZE - 5);
 	win2_board_->setFillColor(FONT_SCORE_COLOR);
 
-	displayScore(score_board_.player1_score_, score_board_.player1_score_, score_board_.player1_win_, score_board_.player2_win_);
+	displayScore(score_board_.player1_score, score_board_.player1_score, 
+		score_board_.player1_win, score_board_.player2_win);
 }
 
 void GameScreen::displayScore(unsigned s1, unsigned s2, unsigned w1, unsigned w2) {
-	score_board_.score_view_->setString(std::to_string(s1) + " : " + std::to_string(s2));
+	score_board_.score_view->setString(std::to_string(s1) + " : " + std::to_string(s2));
 	win1_board_->setString(std::to_string(w1));
 	win2_board_->setString(std::to_string(w2));
 
-	sf::FloatRect scoreBounds = score_board_.score_view_->getLocalBounds(); //pega as delimitacoes do retangulo do texto
+	sf::FloatRect scoreBounds = score_board_.score_view->getLocalBounds(); //pega as delimitacoes do retangulo do texto
 	sf::FloatRect win1Bounds = win1_board_->getLocalBounds();
-	sf::FloatRect win2Bounds = score_board_.score_view_->getLocalBounds();
+	sf::FloatRect win2Bounds = score_board_.score_view->getLocalBounds();
 
-	score_board_.score_view_->setOrigin(scoreBounds.left + scoreBounds.width / 2, scoreBounds.top + scoreBounds.height / 2);
-	score_board_.score_view_->setPosition(WINDOW_WIDTH / 2, 30);
+	score_board_.score_view->setOrigin(scoreBounds.left + scoreBounds.width / 2, scoreBounds.top + scoreBounds.height / 2);
+	score_board_.score_view->setPosition(WINDOW_WIDTH / 2, 30);
 
 	win1_board_->setPosition(WINDOW_WIDTH / 2 - scoreBounds.width / 2 - win1Bounds.width - 20, 15);
 	win2_board_->setPosition(WINDOW_WIDTH / 2 + scoreBounds.width / 2 + 20, 15);
@@ -174,10 +175,10 @@ void GameScreen::handleInput()
 					setSceneType(Scene::Type::MENU);
 					unpause();
 					createMenuScene();
-					score_board_.player1_score_ = 0;
-					score_board_.player2_score_ = 0;
-					score_board_.player1_win_ = 0;
-					score_board_.player2_win_ = 0;
+					score_board_.player1_score = 0;
+					score_board_.player2_score = 0;
+					score_board_.player1_win = 0;
+					score_board_.player2_win = 0;
 					level_ = 0;
 				}
 				//QUIT GAME
@@ -213,10 +214,10 @@ void GameScreen::handleInput()
 void GameScreen::checkOutOfScreen(std::shared_ptr<Movable> & obj)
 {
 	sf::Vector2 pos = obj->getPosition_();
-	unsigned * player1_score_ = &score_board_.player1_score_;
-	unsigned* player2_score_ = &score_board_.player2_score_;
-	unsigned* player1_win_ = &score_board_.player1_win_;
-	unsigned* player2_win_ = &score_board_.player2_win_;
+	unsigned * player1_score_ = &score_board_.player1_score;
+	unsigned* player2_score_ = &score_board_.player2_score;
+	unsigned* player1_win_ = &score_board_.player1_win;
+	unsigned* player2_win_ = &score_board_.player2_win;
 
 	if(pos.x < 0)
 	{
@@ -241,18 +242,18 @@ void GameScreen::checkOutOfScreen(std::shared_ptr<Movable> & obj)
 	}
 }
 void GameScreen::checkEndLevel() {
-	if(score_board_.player1_score_ == 3) {
-		score_board_.player1_win_++;
+	if(score_board_.player1_score == 3) {
+		score_board_.player1_win++;
 		changeLevel();
-	} else if(score_board_.player2_score_ == 3) {
-		score_board_.player2_win_++;
+	} else if(score_board_.player2_score == 3) {
+		score_board_.player2_win++;
 		changeLevel();
 	}
 }
 void GameScreen::changeLevel() {
 	level_++;
-	score_board_.player1_score_ = 0;
-	score_board_.player2_score_ = 0;
+	score_board_.player1_score = 0;
+	score_board_.player2_score = 0;
 
 	//sempre retornar pro level 0, porem velocidade continua aumentando
 	if (level_ > 3) {
@@ -313,7 +314,7 @@ void GameScreen::createPlayScene()
 	game_objects_.push_back(ball_);
 
 	initScore();
-	scene_->addObject(score_board_.score_view_);
+	scene_->addObject(score_board_.score_view);
 	scene_->addObject(win1_board_);
 	scene_->addObject(win2_board_);
 }
@@ -449,7 +450,11 @@ void GameScreen::run()
 				std::cout << "posicao do other player " << other_player_pos.x << " : " << other_player_pos.y << "\n";
 
 				packet.clear();
+				// receive scoreboard
+				packet = client_->receivePacket();
+				packet >> score_board_;
 
+				packet.clear();
 				
 			}
 		}

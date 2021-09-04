@@ -1,6 +1,7 @@
 #pragma once
 #include <SFML/Network.hpp>
 #include <SFML/System.hpp>
+#include <SFML/Graphics/Shape.hpp>
 #include <list>
 #include "../defs.h"
 #include <queue>
@@ -22,16 +23,15 @@ class GameServer
 		static sf::Vector2f ball_speed_;
 		static int numb_clients_;
 	private:
+
 		void updateGameState();
 		sf::TcpListener listener_;
-		
 		std::unordered_map<std::string, std::shared_ptr<sf::TcpSocket>> clients_map_;
-
 		std::queue<GamePacket> in_packets_;
 
 		bool blocking;
 		int port_;
-		const char addr_separator_ = '$';
-
 		bool running_;
+		bool checkOutOfLimitsBoundary(std::shared_ptr<sf::Shape> obj);
+		const char addr_separator_ = '$';
 };

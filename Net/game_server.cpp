@@ -5,7 +5,7 @@
 #include "../ball.h"
 #include "../paddle.h"
 #include "../movable.h"
-
+#include "../scoreboard.h"
 using namespace std::chrono_literals;
 int GameServer::numb_clients_ = 0;
 sf::Vector2f GameServer::ball_position_ = sf::Vector2f(0, 0);
@@ -155,6 +155,8 @@ void GameServer::run()
 	game_objects.push_back(player1);
 	game_objects.push_back(player2);
 
+	ScoreBoard scoreboard;
+
 	while (running_)
 	{
 		ball_position_ = ball->getPosition(); // push ball position
@@ -217,12 +219,23 @@ void GameServer::run()
 			std::cout <<"player 2" <<player2->getPosition().x << " : " << player2->getPosition().y << "\n";
 
 		}
-		auto obj = std::dynamic_pointer_cast<Movable>(ball);
-		if (checkOutOfLimitsBoundary(ball) && !collided)
+		if (checkOutOfLimitsBoundary(ball))
 		{
 			auto pos = ball->getPosition();
-			obj->restartPosistion();
+			ball->restartPosistion();
+			if (pos.x < 0)
+			{
+				scoreboard.player2_score++;
+			}
+			else
+			{
+				scoreboard.player1_score++;
+			}
 		}
+		GamePacket scoreboard_packet;
+
+		scoreboard_packet << scoreboard;
+		sendPacketToClients(scoreboard_packet);
 		
 		std::this_thread::sleep_for(33ms);
 
