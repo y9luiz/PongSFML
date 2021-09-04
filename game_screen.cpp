@@ -372,6 +372,9 @@ void GameScreen::run()
 			ball_->checkCollision(game_objects_);
 			auto obj = std::dynamic_pointer_cast<Movable>(ball_);
 			checkOutOfScreen(obj);
+
+			checkEndLevel();
+
 		}
 		else if (scene_type_ == Scene::Type::PLAY && host_type_ == HostType::MULTIPLAYER)
 		{
@@ -456,6 +459,8 @@ void GameScreen::run()
 
 				packet.clear();
 				
+				displayScore(score_board_.player1_score, score_board_.player2_score,
+					score_board_.player1_win, score_board_.player2_win);
 			}
 		}
 		else if (scene_type_ == Scene::Type::PAUSE)
@@ -473,7 +478,6 @@ void GameScreen::run()
 		handleInput();
 		scene_->drawObjects();
 		display();
-   		checkEndLevel();
     
 		std::this_thread::sleep_for(33ms);
 	}
