@@ -133,15 +133,20 @@ void GameServer::run()
 {
 	running_ = true;
 
-	Ball ball(BALL_INIT_POSITION,BALL_RADIUS);
-	ball.setSpeed(BALL_SPEED);
+	std::shared_ptr <Ball> ball = std::make_shared <Ball>(BALL_INIT_POSITION,BALL_RADIUS);
+	ball->setSpeed(BALL_SPEED);
 
-	Paddle player1(PLAYER_1_RECT);
-	Paddle player2(PLAYER_2_RECT);
+	std::shared_ptr<Paddle> player1 = std::make_shared<Paddle>(PLAYER_1_RECT);
+	std::shared_ptr <Paddle> player2 = std::make_shared<Paddle>(PLAYER_2_RECT);
 	
+	std::vector<std::shared_ptr<sf::Shape>> game_objects;
+
+	game_objects.push_back(player1);
+	game_objects.push_back(player2);
+
 	while (running_)
 	{
-		ball_position_ = ball.getPosition(); // push ball position
+		ball_position_ = ball->getPosition(); // push ball position
 		GamePacket ball_position_pack;
 		ball_position_pack << ball_position_;
 		
@@ -171,10 +176,16 @@ void GameServer::run()
 			{
 				player1_ip = client_pair.first;
 				player1_packet_pos = in_packets_.front();
+				sf::Vector2f pos(0, 0);
+				player1_packet_pos >> pos;
+				player2->setPosition(pos);
 			}
 			else if(idx == 1){
 				player2_ip = client_pair.first;
 				player2_packet_pos = in_packets_.front();
+				sf::Vector2f pos(0, 0);
+				player2_packet_pos >> pos;
+				player2->setPosition(pos);
 			}
 			in_packets_.pop();
 
@@ -183,7 +194,9 @@ void GameServer::run()
 		clients_map_[player1_ip]->send(player2_packet_pos);
 		clients_map_[player2_ip]->send(player1_packet_pos);
 		
-		autoMove(ball);
+		autoMove(*ball);
+		ball->checkCollision(game_objects);
+		
 		std::this_thread::sleep_for(33ms);
 
 	}
