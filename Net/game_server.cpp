@@ -4,7 +4,8 @@
 #include <iostream>
 #include "../ball.h"
 #include "../paddle.h"
-//#include "../utils.h"
+#include "../movable.h"
+
 using namespace std::chrono_literals;
 int GameServer::numb_clients_ = 0;
 sf::Vector2f GameServer::ball_position_ = sf::Vector2f(0, 0);
@@ -62,7 +63,7 @@ void GameServer::receivePacketsFromClients()
 	
 	for (auto& client_pair : clients_map_)
 	{
-		std::cout << "receiving packets from client " << client_pair.first << "\n";
+		//std::cout << "receiving packets from client " << client_pair.first << "\n";
 
 		auto client = client_pair.second;
 
@@ -70,7 +71,7 @@ void GameServer::receivePacketsFromClients()
 		GamePacket packet;
 		if (client->receive(packet) == sf::Socket::Done)
 		{
-			std::cout << "packet received...\n";
+			//std::cout << "packet received...\n";
 			std::cout << (char*)packet.getData() << "\n";
 			std::string address;
 			address += addr_separator_;
@@ -95,7 +96,7 @@ void GameServer::sendPacketToClients(GamePacket & packet )
 		// packet send routine
 		if (client->send(packet) == sf::Socket::Done)
 		{
-			std::cout << "packet sent\n";
+			//std::cout << "packet sent\n";
 			//	we need to send the ball position to the client
 		}
 		
@@ -106,7 +107,7 @@ void GameServer::sendPacketToClient(GamePacket& packet, const std::string & ip)
 {
 	if (clients_map_[ip]->send(packet) == sf::Socket::Done)
 	{
-		std::cout << "packet sent\n";
+		//std::cout << "packet sent\n";
 	}
 	else {
 		std::cout << "packet not sented\n";
@@ -128,6 +129,16 @@ void GameServer::updateGameState()
 		in_packets_.pop();*/
 	}
 }
+
+bool GameServer::checkOutOfLimitsBoundary(std::shared_ptr<sf::Shape> obj)
+{
+	auto pos = obj->getPosition();
+	if (pos.x < 0 || pos.y < 0 || pos.x > WINDOW_WIDTH || pos.y > WINDOW_HEIGHT)
+		return true;
+	
+	return false;
+}
+
 
 void GameServer::run()
 {
@@ -151,11 +162,10 @@ void GameServer::run()
 		ball_position_pack << ball_position_;
 		
 		sendPacketToClients(ball_position_pack);
-		//out_packets_.push(ball_position_pack);
 		sf::Vector2f ball_pos_test;
 		ball_position_pack >> ball_pos_test;
-		std::cout << ball_pos_test.x << ": " << ball_pos_test.y << "\n";
-		std::cout << ball_position_.x <<": "<< ball_position_.y << "\n";
+		//std::cout << ball_pos_test.x << ": " << ball_pos_test.y << "\n";
+		//std::cout << ball_position_.x <<": "<< ball_position_.y << "\n";
 
 		/* Receive paddles position
 		*	receive packages with the position of each client
@@ -178,7 +188,8 @@ void GameServer::run()
 				player1_packet_pos = in_packets_.front();
 				sf::Vector2f pos(0, 0);
 				player1_packet_pos >> pos;
-				player2->setPosition(pos);
+				player1->setPosition(pos);
+		
 			}
 			else if(idx == 1){
 				player2_ip = client_pair.first;
@@ -195,7 +206,23 @@ void GameServer::run()
 		clients_map_[player2_ip]->send(player1_packet_pos);
 		
 		autoMove(*ball);
-		ball->checkCollision(game_objects);
+		bool collided = ball->checkCollision(game_objects);
+		if (collided)
+		{
+			std::cout << "colidiu\n";
+		}
+		else
+		{
+			std::cout <<"player 1" << player1->getPosition().x << " : " << player1->getPosition().y << "\n";
+			std::cout <<"player 2" <<player2->getPosition().x << " : " << player2->getPosition().y << "\n";
+
+		}
+		auto obj = std::dynamic_pointer_cast<Movable>(ball);
+		if (checkOutOfLimitsBoundary(ball) && !collided)
+		{
+			auto pos = ball->getPosition();
+			obj->restartPosistion();
+		}
 		
 		std::this_thread::sleep_for(33ms);
 
