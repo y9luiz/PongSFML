@@ -378,10 +378,13 @@ void GameScreen::run()
 				switch (client_->getPlayerIndex())
 				{
 					case 0:
+						std::cout << "voce é o player ... " << 1 << "\n";
 						player = player1_;
 						other_player = player2_;
 						break;
 					case 1:
+						std::cout << "voce é o player ... " << 2 << "\n";
+
 						player = player2_;
 						other_player = player1_;
 						break;
@@ -391,7 +394,10 @@ void GameScreen::run()
 						break;
 				}
 
+
 				auto paddle_pos = player->getPosition();
+				std::cout << "posicao dp player " << paddle_pos.x << " : " << paddle_pos.y << "\n";
+
 				std::cout << "sending paddle position\n";
 				packet << paddle_pos;
 				client_->sendPacket(packet);
@@ -414,6 +420,7 @@ void GameScreen::run()
 				sf::Vector2f other_player_pos;
 				packet >> other_player_pos;
 				other_player->setPosition(other_player_pos);
+				std::cout << "posicao do other player " << other_player_pos.x << " : " << other_player_pos.y << "\n";
 
 				packet.clear();
 
