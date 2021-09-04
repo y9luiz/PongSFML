@@ -139,7 +139,12 @@ void GameServer::run()
 		ball_position_ = ball.getPosition();
 		GamePacket ball_position_pack;
 		ball_position_pack << ball_position_;
+		
 		out_packets_.push(ball_position_pack);
+		sf::Vector2f ball_pos_test;
+		ball_position_pack >> ball_pos_test;
+		std::cout << ball_pos_test.x << ": " << ball_pos_test.y << "\n";
+		std::cout << ball_position_.x <<": "<< ball_position_.y << "\n";
 
 		/*
 		*	receive packages with the position of each client
@@ -168,6 +173,8 @@ void GameServer::run()
 		autoMove(ball);
 
 		sendAllPacketsToClients();
+
+		std::this_thread::sleep_for(33ms);
 
 	}
 }

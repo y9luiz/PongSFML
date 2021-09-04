@@ -372,14 +372,18 @@ void GameScreen::run()
 				GamePacket packet;
 
 				std::shared_ptr<Paddle> player;
+				std::shared_ptr<Paddle> other_player;
+
 				// send paddle position
 				switch (client_->getPlayerIndex())
 				{
 					case 0:
 						player = player1_;
+						other_player = player2_;
 						break;
 					case 1:
 						player = player2_;
+						other_player = player1_;
 						break;
 					default:
 						std::cerr << "could not to retrieve the player index\n";
@@ -403,6 +407,16 @@ void GameScreen::run()
 
 				packet.clear();
 
+				// receive the other player position
+				std::cout << "receiving ball position\n";
+				packet = client_->receivePacket();
+				std::cout << "received ball position\n";
+				sf::Vector2f other_player_pos;
+				packet >> other_player_pos;
+				other_player->setPosition(other_player_pos);
+
+				packet.clear();
+
 
 			}
 		}
@@ -423,6 +437,6 @@ void GameScreen::run()
 		display();
    		checkEndLevel();
     
-		std::this_thread::sleep_for(33ms);
+		std::this_thread::sleep_for(1s);
 	}
 }
