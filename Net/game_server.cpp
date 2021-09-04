@@ -222,14 +222,27 @@ void GameServer::run()
 		if (checkOutOfLimitsBoundary(ball))
 		{
 			auto pos = ball->getPosition();
-			ball->restartPosistion();
 			if (pos.x < 0)
 			{
 				scoreboard.player2_score++;
+				ball->restartPosistion();
 			}
-			else
+			else if(pos.x>= WINDOW_WIDTH)
 			{
 				scoreboard.player1_score++;
+				ball->restartPosistion();
+			}
+			if (pos.y <= 0)
+			{
+				ball->changeDirectionToDown();
+				std::cout << "MUDOU A DIREÇÃO PARA BAIXO\n";
+
+
+			}
+			else if (pos.y + 2 * BALL_RADIUS >= WINDOW_HEIGHT)
+			{
+				ball->changeDirectionToUp();
+				std::cout << "MUDOU A DIREÇÃO PARA CIMA\n";
 			}
 		}
 		GamePacket scoreboard_packet;
