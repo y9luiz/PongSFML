@@ -1,4 +1,5 @@
 #include "game_client.h"
+#include <iostream>
 GameClient::GameClient(const std::string& address, unsigned int port, bool blocking )
 	: address_(address),port_(port)
 {

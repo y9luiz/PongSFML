@@ -28,6 +28,6 @@ class GameClient
 		std::string address_;
 		unsigned int port_;
 		std::shared_ptr<sf::TcpSocket> socket_;
-		bool is_connected_;
+		bool is_connected_ = false;
 		uint8_t player_idx_;
 };

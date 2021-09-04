@@ -40,6 +40,7 @@ void GameServer::waitForClients()
 		{
 			numb_clients_++;
 		}
+		
 		std::this_thread::sleep_for(1ms);
 	}
 
@@ -49,6 +50,7 @@ void GameServer::notifyClients()
 {
 	GamePacket packet;
 	packet << client_idx++;
+	std::cout << "cliente idx " << client_idx << "\n";
 	sendPacketToClients(packet);
 }
 void GameServer::receivePacketsFromClients()

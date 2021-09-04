@@ -365,6 +365,8 @@ void GameScreen::run()
 			}
 			else 
 			{
+				std::cout << client_->isConnected() << "\n";
+				std::cout << (int) client_->getPlayerIndex() << "\n";
 				std::cout << "ready\n";
 
 				GamePacket packet;
