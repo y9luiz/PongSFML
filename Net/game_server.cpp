@@ -45,13 +45,17 @@ void GameServer::waitForClients()
 	}
 
 }
-unsigned client_idx = 0;
 void GameServer::notifyClients()
 {
-	GamePacket packet;
-	packet << client_idx++;
+	unsigned client_idx=0;
+	for (auto& client_pair : clients_map_)
+	{
+		GamePacket packet;
+		packet << client_idx++;
+		sendPacketToClient(packet, client_pair.first);
+
+	}
 	std::cout << "cliente idx " << client_idx << "\n";
-	sendPacketToClients(packet);
 }
 void GameServer::receivePacketsFromClients()
 {
@@ -98,15 +102,17 @@ void GameServer::sendPacketToClients(GamePacket & packet )
 	}
 
 }
-void GameServer::sendAllPacketsToClients()
+void GameServer::sendPacketToClient(GamePacket& packet, const std::string & ip)
 {
-	while (!out_packets_.empty())
+	if (clients_map_[ip]->send(packet) == sf::Socket::Done)
 	{
-		auto packet = out_packets_.front();
-		sendPacketToClients(packet);
-		out_packets_.pop();
+		std::cout << "packet sent\n";
+	}
+	else {
+		std::cout << "packet not sented\n";
 	}
 }
+
 
 void GameServer::updateGameState()
 {
@@ -135,46 +141,52 @@ void GameServer::run()
 	
 	while (running_)
 	{
-		// send the ball position
-		ball_position_ = ball.getPosition();
+		ball_position_ = ball.getPosition(); // push ball position
 		GamePacket ball_position_pack;
 		ball_position_pack << ball_position_;
 		
-		out_packets_.push(ball_position_pack);
+		sendPacketToClients(ball_position_pack);
+		//out_packets_.push(ball_position_pack);
 		sf::Vector2f ball_pos_test;
 		ball_position_pack >> ball_pos_test;
 		std::cout << ball_pos_test.x << ": " << ball_pos_test.y << "\n";
 		std::cout << ball_position_.x <<": "<< ball_position_.y << "\n";
 
-		/*
+		/* Receive paddles position
 		*	receive packages with the position of each client
 		*/
 		receivePacketsFromClients(); // this function also addeds the client address at the end of packet
 
 		int idx = 0;
+
+		std::string player1_ip;
+		GamePacket player1_packet_pos;
+
+		std::string player2_ip;
+		GamePacket player2_packet_pos;
+
 		for (const auto& client_pair : clients_map_)
 		{
-			auto pos = sf::Vector2f(0, 0);
-			auto game_packet = in_packets_.front();
-			out_packets_.push(game_packet);
-			game_packet >> pos;
-
 			if (idx == 0)
 			{
-				player1.setPosition(pos);
+				player1_ip = client_pair.first;
+				player1_packet_pos = in_packets_.front();
 			}
-			else if(idx == 1)
-			{
-				player2.setPosition(pos);
+			else if(idx == 1){
+				player2_ip = client_pair.first;
+				player2_packet_pos = in_packets_.front();
 			}
+			in_packets_.pop();
+
 			idx++;
 		}
+		clients_map_[player1_ip]->send(player2_packet_pos);
+		clients_map_[player2_ip]->send(player1_packet_pos);
+
+		
 		
 		autoMove(ball);
-
-		sendAllPacketsToClients();
-
-		std::this_thread::sleep_for(33ms);
+		std::this_thread::sleep_for(1s);
 
 	}
 }

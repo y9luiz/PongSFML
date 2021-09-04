@@ -16,7 +16,7 @@ class GameServer
 		void notifyClients();
 		void receivePacketsFromClients();
 		void sendPacketToClients(GamePacket& packet);
-		void sendAllPacketsToClients();
+		void sendPacketToClient(GamePacket& packet, const std::string& ip);
 		void run();
 		static sf::Vector2f ball_position_;
 		static sf::Vector2f ball_speed_;
@@ -28,7 +28,6 @@ class GameServer
 		std::unordered_map<std::string, std::shared_ptr<sf::TcpSocket>> clients_map_;
 
 		std::queue<GamePacket> in_packets_;
-		std::queue<GamePacket> out_packets_;
 
 		bool blocking;
 		int port_;
