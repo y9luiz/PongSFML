@@ -186,7 +186,7 @@ void GameServer::run()
 		
 		
 		autoMove(ball);
-		std::this_thread::sleep_for(1s);
+		std::this_thread::sleep_for(33ms);
 
 	}
 }
