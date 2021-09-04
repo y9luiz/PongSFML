@@ -440,9 +440,9 @@ void GameScreen::run()
 				packet.clear();
 
 				// receive the other player position
-				std::cout << "receiving ball position\n";
+				std::cout << "receiving other player position\n";
 				packet = client_->receivePacket();
-				std::cout << "received ball position\n";
+				std::cout << "received other player position\n";
 				sf::Vector2f other_player_pos;
 				packet >> other_player_pos;
 				other_player->setPosition(other_player_pos);
@@ -450,7 +450,7 @@ void GameScreen::run()
 
 				packet.clear();
 
-
+				
 			}
 		}
 		else if (scene_type_ == Scene::Type::PAUSE)
