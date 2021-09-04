@@ -182,8 +182,6 @@ void GameServer::run()
 		}
 		clients_map_[player1_ip]->send(player2_packet_pos);
 		clients_map_[player2_ip]->send(player1_packet_pos);
-
-		
 		
 		autoMove(ball);
 		std::this_thread::sleep_for(33ms);
