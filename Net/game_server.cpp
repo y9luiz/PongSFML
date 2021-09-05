@@ -56,7 +56,6 @@ void GameServer::notifyClients()
 		sendPacketToClient(packet, client_pair.first);
 
 	}
-	std::cout << "cliente idx " << client_idx << "\n";
 }
 void GameServer::receivePacketsFromClients()
 {
@@ -72,7 +71,7 @@ void GameServer::receivePacketsFromClients()
 		if (client->receive(packet) == sf::Socket::Done)
 		{
 			//std::cout << "packet received...\n";
-			std::cout << (char*)packet.getData() << "\n";
+			//std::cout << (char*)packet.getData() << "\n";
 			std::string address;
 			address += addr_separator_;
 			address += client->getRemoteAddress().toString();
@@ -168,9 +167,7 @@ void GameServer::run()
 		sendPacketToClients(ball_position_pack);
 		sf::Vector2f ball_pos_test;
 		ball_position_pack >> ball_pos_test;
-		//std::cout << ball_pos_test.x << ": " << ball_pos_test.y << "\n";
-		//std::cout << ball_position_.x <<": "<< ball_position_.y << "\n";
-
+		
 		/* Receive paddles position
 		*	receive packages with the position of each client
 		*/
@@ -211,24 +208,11 @@ void GameServer::run()
 		
 		autoMove(*ball);
 		bool collided = ball->checkCollision(game_objects);
-		if (collided)
-		{
-			std::cout << "colidiu\n";
-		}
-		else
-		{
-			std::cout <<"player 1" << player1->getPosition().x << " : " << player1->getPosition().y << "\n";
-			std::cout <<"player 2" <<player2->getPosition().x << " : " << player2->getPosition().y << "\n";
-
-		}
+		
 		if (checkOutOfLimitsBoundary(ball))
 		{
 			auto pos = ball->getPosition();
 
-			auto resetPartialScore =[&scoreboard](){
-				scoreboard.player1_score = 0;
-				scoreboard.player2_score = 0;
-			};
 
 			if (pos.x < 0)
 			{
@@ -243,31 +227,32 @@ void GameServer::run()
 			if (pos.y <= 0)
 			{
 				ball->changeDirectionToDown();
-				std::cout << "MUDOU A DIREÇÃO PARA BAIXO\n";
-
-
 			}
 			else if (pos.y + 2 * BALL_RADIUS >= WINDOW_HEIGHT)
 			{
 				ball->changeDirectionToUp();
-				std::cout << "MUDOU A DIREÇÃO PARA CIMA\n";
 			}
-			if (scoreboard.player1_score >= max_partial_score)
-			{
-				resetPartialScore();
-				scoreboard.player1_win++;
-			}
-			else if (scoreboard.player2_score >= max_partial_score)
-			{
-				resetPartialScore();
-				scoreboard.player2_win++;
-			}
+			
 		}
 		GamePacket scoreboard_packet;
 
 		scoreboard_packet << scoreboard;
 		sendPacketToClients(scoreboard_packet);
-		
+		auto resetPartialScore = [&scoreboard]() {
+			scoreboard.player1_score = 0;
+			scoreboard.player2_score = 0;
+		};
+
+		if (scoreboard.player1_score >= max_partial_score)
+		{
+			resetPartialScore();
+			scoreboard.player1_win++;
+		}
+		else if (scoreboard.player2_score >= max_partial_score)
+		{
+			resetPartialScore();
+			scoreboard.player2_win++;
+		}
 		std::this_thread::sleep_for(33ms);
 
 	}
